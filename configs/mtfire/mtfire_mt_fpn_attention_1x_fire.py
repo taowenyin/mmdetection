@@ -4,7 +4,8 @@ _base_ = [
 ]
 
 dataset_type = 'CocoDataset'
-data_root = '/home/taowenyin/MyCode/Dataset/voc2012/coco/'
+# data_root = '/home/taowenyin/MyCode/Dataset/voc2012/coco/'
+data_root = 'D:/MyCode/Dataset/voc2007/coco'
 
 classes = ('aeroplane', 'bicycle', 'bird', 'boat', 'bottle', 'bus', 'car',
            'cat', 'chair', 'cow', 'diningtable', 'dog', 'horse',
@@ -14,7 +15,25 @@ classes = ('aeroplane', 'bicycle', 'bird', 'boat', 'bottle', 'bus', 'car',
 model = dict(
     type='MTFire',
     backbone=dict(
-        type='MTNet'
+        type='MTNet',
+        num_classes=1000,
+        embed_dims=[46, 92, 184, 368],
+        stem_channel=16,
+        fc_dim=1280,
+        num_heads=[1, 2, 4, 8],
+        mlp_ratios=[3.6, 3.6, 3.6, 3.6],
+        qkv_bias=True,
+        qk_scale=None,
+        representation_size=None,
+        drop_rate=0.,
+        attn_drop_rate=0.,
+        drop_path_rate=0.,
+        hybrid_backbone=None,
+        norm_layer=None,
+        depths=[2, 2, 10, 2],
+        qk_ratio=1,
+        sr_ratios=[8, 4, 2, 1],
+        dp=0.1
     ),
     neck=dict(
 

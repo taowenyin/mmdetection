@@ -1,5 +1,5 @@
 dataset_type = 'CocoDataset'
-data_root = '/home/taowenyin/MyCode/Dataset/voc2012/coco/'
+data_root = 'D:/MyCode/Dataset/voc2007/coco'
 img_norm_cfg = dict(
     mean=[123.675, 116.28, 103.53], std=[58.395, 57.12, 57.375], to_rgb=True)
 train_pipeline = [
@@ -41,8 +41,8 @@ data = dict(
     train=dict(
         type='CocoDataset',
         ann_file=
-        '/home/taowenyin/MyCode/Dataset/voc2012/coco/annotations/instances_train2017.json',
-        img_prefix='/home/taowenyin/MyCode/Dataset/voc2012/coco/train2017/',
+        'D:/MyCode/Dataset/voc2007/cocoannotations/instances_train2017.json',
+        img_prefix='D:/MyCode/Dataset/voc2007/cocotrain2017/',
         pipeline=[
             dict(type='LoadImageFromFile'),
             dict(type='LoadAnnotations', with_bbox=True),
@@ -64,8 +64,8 @@ data = dict(
     val=dict(
         type='CocoDataset',
         ann_file=
-        '/home/taowenyin/MyCode/Dataset/voc2012/coco/annotations/instances_val2017.json',
-        img_prefix='/home/taowenyin/MyCode/Dataset/voc2012/coco/val2017/',
+        'D:/MyCode/Dataset/voc2007/cocoannotations/instances_val2017.json',
+        img_prefix='D:/MyCode/Dataset/voc2007/cocoval2017/',
         pipeline=[
             dict(type='LoadImageFromFile'),
             dict(
@@ -92,8 +92,8 @@ data = dict(
     test=dict(
         type='CocoDataset',
         ann_file=
-        '/home/taowenyin/MyCode/Dataset/voc2012/coco/annotations/instances_val2017.json',
-        img_prefix='/home/taowenyin/MyCode/Dataset/voc2012/coco/val2017/',
+        'D:/MyCode/Dataset/voc2007/cocoannotations/instances_val2017.json',
+        img_prefix='D:/MyCode/Dataset/voc2007/cocoval2017/',
         pipeline=[
             dict(type='LoadImageFromFile'),
             dict(
@@ -143,7 +143,26 @@ classes = ('aeroplane', 'bicycle', 'bird', 'boat', 'bottle', 'bus', 'car',
            'person', 'pottedplant', 'sheep', 'sofa', 'train', 'tvmonitor')
 model = dict(
     type='MTFire',
-    backbone=dict(type='MTNet'),
+    backbone=dict(
+        type='MTNet',
+        num_classes=1000,
+        embed_dims=[46, 92, 184, 368],
+        stem_channel=16,
+        fc_dim=1280,
+        num_heads=[1, 2, 4, 8],
+        mlp_ratios=[3.6, 3.6, 3.6, 3.6],
+        qkv_bias=True,
+        qk_scale=None,
+        representation_size=None,
+        drop_rate=0.0,
+        attn_drop_rate=0.0,
+        drop_path_rate=0.0,
+        hybrid_backbone=None,
+        norm_layer=None,
+        depths=[2, 2, 10, 2],
+        qk_ratio=1,
+        sr_ratios=[8, 4, 2, 1],
+        dp=0.1),
     neck=dict(),
     bbox_head=dict(),
     train_cfg=dict(
@@ -162,6 +181,6 @@ model = dict(
         score_thr=0.05,
         nms=dict(type='nms', iou_threshold=0.5),
         max_per_img=100))
-work_dir = '../fire_detection/'
+work_dir = '../fire_detection'
 auto_resume = False
 gpu_ids = [0]
