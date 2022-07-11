@@ -114,6 +114,7 @@ class Attention(nn.Module):
             k = self.k(x).reshape(B, N, self.num_heads, self.qk_dim // self.num_heads).permute(0, 2, 1, 3)
             v = self.v(x).reshape(B, N, self.num_heads, C // self.num_heads).permute(0, 2, 1, 3)
 
+        # 标准计算Self-Attention的方法
         attn = (q @ k.transpose(-2, -1)) * self.scale + relative_pos
         attn = attn.softmax(dim=-1)
         attn = self.attn_drop(attn)
