@@ -102,7 +102,7 @@ model = dict(
             nms=dict(type='nms', iou_threshold=0.5),
             max_per_img=100)))
 dataset_type = 'CocoDataset'
-data_root = '/mnt/dataset/voc2012/coco/'
+data_root = 'D:/MyCode/Dataset/voc2007/coco/'
 img_norm_cfg = dict(
     mean=[123.675, 116.28, 103.53], std=[58.395, 57.12, 57.375], to_rgb=True)
 train_pipeline = [
@@ -144,8 +144,8 @@ data = dict(
     train=dict(
         type='CocoDataset',
         ann_file=
-        '/mnt/dataset/voc2012/coco/annotations/instances_train2017.json',
-        img_prefix='/mnt/dataset/voc2012/coco/train2017/',
+        'D:/MyCode/Dataset/voc2007/coco/annotations/instances_train2017.json',
+        img_prefix='D:/MyCode/Dataset/voc2007/coco/train2017/',
         pipeline=[
             dict(type='LoadImageFromFile'),
             dict(type='LoadAnnotations', with_bbox=True),
@@ -166,8 +166,9 @@ data = dict(
                  'train', 'tvmonitor')),
     val=dict(
         type='CocoDataset',
-        ann_file='/mnt/dataset/voc2012/coco/annotations/instances_val2017.json',
-        img_prefix='/mnt/dataset/voc2012/coco/val2017/',
+        ann_file=
+        'D:/MyCode/Dataset/voc2007/coco/annotations/instances_val2017.json',
+        img_prefix='D:/MyCode/Dataset/voc2007/coco/val2017/',
         pipeline=[
             dict(type='LoadImageFromFile'),
             dict(
@@ -193,8 +194,9 @@ data = dict(
                  'train', 'tvmonitor')),
     test=dict(
         type='CocoDataset',
-        ann_file='/mnt/dataset/voc2012/coco/annotations/instances_val2017.json',
-        img_prefix='/mnt/dataset/voc2012/coco/val2017/',
+        ann_file=
+        'D:/MyCode/Dataset/voc2007/coco/annotations/instances_val2017.json',
+        img_prefix='D:/MyCode/Dataset/voc2007/coco/val2017/',
         pipeline=[
             dict(type='LoadImageFromFile'),
             dict(
@@ -234,7 +236,7 @@ custom_hooks = [dict(type='NumClassCheckHook')]
 dist_params = dict(backend='nccl')
 log_level = 'INFO'
 load_from = '../checkpoints/faster_rcnn_r50_fpn_1x_coco_20200130-047c8118.pth'
-resume_from = None
+resume_from = '../checkpoints/faster_rcnn_r50_fpn_1x_coco_20200130-047c8118.pth'
 workflow = [('train', 1)]
 opencv_num_threads = 0
 mp_start_method = 'fork'
@@ -242,6 +244,6 @@ auto_scale_lr = dict(enable=False, base_batch_size=16)
 classes = ('aeroplane', 'bicycle', 'bird', 'boat', 'bottle', 'bus', 'car',
            'cat', 'chair', 'cow', 'diningtable', 'dog', 'horse', 'motorbike',
            'person', 'pottedplant', 'sheep', 'sofa', 'train', 'tvmonitor')
-work_dir = '../voc_test/'
+work_dir = '../voc_test'
 auto_resume = False
 gpu_ids = [0]

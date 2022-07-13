@@ -1,11 +1,11 @@
 dataset_type = 'CocoDataset'
-data_root = 'D:/MyCode/Dataset/voc2007/coco'
+data_root = 'D:/MyCode/Dataset/voc2007/coco/'
 img_norm_cfg = dict(
     mean=[123.675, 116.28, 103.53], std=[58.395, 57.12, 57.375], to_rgb=True)
 train_pipeline = [
     dict(type='LoadImageFromFile'),
     dict(type='LoadAnnotations', with_bbox=True),
-    dict(type='Resize', img_scale=(1333, 800), keep_ratio=True),
+    dict(type='Resize', img_scale=(224, 224), keep_ratio=False),
     dict(type='RandomFlip', flip_ratio=0.5),
     dict(
         type='Normalize',
@@ -20,7 +20,7 @@ test_pipeline = [
     dict(type='LoadImageFromFile'),
     dict(
         type='MultiScaleFlipAug',
-        img_scale=(1333, 800),
+        img_scale=(300, 300),
         flip=False,
         transforms=[
             dict(type='Resize', keep_ratio=True),
@@ -41,12 +41,12 @@ data = dict(
     train=dict(
         type='CocoDataset',
         ann_file=
-        'D:/MyCode/Dataset/voc2007/cocoannotations/instances_train2017.json',
-        img_prefix='D:/MyCode/Dataset/voc2007/cocotrain2017/',
+        'D:/MyCode/Dataset/voc2007/coco/annotations/instances_train2017.json',
+        img_prefix='D:/MyCode/Dataset/voc2007/coco/train2017/',
         pipeline=[
             dict(type='LoadImageFromFile'),
             dict(type='LoadAnnotations', with_bbox=True),
-            dict(type='Resize', img_scale=(1333, 800), keep_ratio=True),
+            dict(type='Resize', img_scale=(224, 224), keep_ratio=False),
             dict(type='RandomFlip', flip_ratio=0.5),
             dict(
                 type='Normalize',
@@ -64,13 +64,13 @@ data = dict(
     val=dict(
         type='CocoDataset',
         ann_file=
-        'D:/MyCode/Dataset/voc2007/cocoannotations/instances_val2017.json',
-        img_prefix='D:/MyCode/Dataset/voc2007/cocoval2017/',
+        'D:/MyCode/Dataset/voc2007/coco/annotations/instances_val2017.json',
+        img_prefix='D:/MyCode/Dataset/voc2007/coco/val2017/',
         pipeline=[
             dict(type='LoadImageFromFile'),
             dict(
                 type='MultiScaleFlipAug',
-                img_scale=(1333, 800),
+                img_scale=(300, 300),
                 flip=False,
                 transforms=[
                     dict(type='Resize', keep_ratio=True),
@@ -92,13 +92,13 @@ data = dict(
     test=dict(
         type='CocoDataset',
         ann_file=
-        'D:/MyCode/Dataset/voc2007/cocoannotations/instances_val2017.json',
-        img_prefix='D:/MyCode/Dataset/voc2007/cocoval2017/',
+        'D:/MyCode/Dataset/voc2007/coco/annotations/instances_val2017.json',
+        img_prefix='D:/MyCode/Dataset/voc2007/coco/val2017/',
         pipeline=[
             dict(type='LoadImageFromFile'),
             dict(
                 type='MultiScaleFlipAug',
-                img_scale=(1333, 800),
+                img_scale=(300, 300),
                 flip=False,
                 transforms=[
                     dict(type='Resize', keep_ratio=True),
@@ -145,7 +145,7 @@ model = dict(
     type='MTFire',
     backbone=dict(
         type='MTNet',
-        num_classes=1000,
+        num_classes=20,
         embed_dims=[46, 92, 184, 368],
         stem_channel=16,
         fc_dim=1280,
@@ -163,8 +163,28 @@ model = dict(
         qk_ratio=1,
         sr_ratios=[8, 4, 2, 1],
         dp=0.1),
-    neck=dict(),
-    bbox_head=dict(),
+    neck=dict(
+        type='FPN',
+        in_channels=[46, 92, 184, 368],
+        out_channels=46,
+        start_level=0,
+        num_outs=4),
+    bbox_head=dict(
+        type='FCOSHead',
+        num_classes=20,
+        in_channels=256,
+        stacked_convs=4,
+        feat_channels=256,
+        strides=[8, 16, 32, 64, 128],
+        loss_cls=dict(
+            type='FocalLoss',
+            use_sigmoid=True,
+            gamma=2.0,
+            alpha=0.25,
+            loss_weight=1.0),
+        loss_bbox=dict(type='IoULoss', loss_weight=1.0),
+        loss_centerness=dict(
+            type='CrossEntropyLoss', use_sigmoid=True, loss_weight=1.0)),
     train_cfg=dict(
         assigner=dict(
             type='MaxIoUAssigner',

@@ -5,7 +5,7 @@ from collections import OrderedDict
 from mmcv.runner import BaseModule
 from functools import partial
 from timm.models.layers import to_2tuple, DropPath, trunc_normal_
-# from ..builder import BACKBONES
+from ..builder import BACKBONES
 
 
 class PatchEmbed(nn.Module):
@@ -183,7 +183,7 @@ class MemoryEfficientSwish(nn.Module):
         return SwishImplementation.apply(x)
 
 
-# @BACKBONES.register_module()
+@BACKBONES.register_module()
 class MTNet(BaseModule):
     """
     MTFire的Backbone
@@ -369,53 +369,57 @@ class MTNet(BaseModule):
         x = self.stem_relu3(x)
         x = self.stem_norm3(x)
 
+        # FPN的输入特征
+        outs = []
+
         # [B, stem_channel, H / 2, W / 2] -> [B, (H / 2 / Patch_Size) * (H / 2 / Patch_Size), embed_dims]
         x, (H, W) = self.patch_embed_a(x)
         for i, blk in enumerate(self.blocks_a):
             x = blk(x, H, W, self.relative_pos_a)
-
         # [B, (H / 2 / Patch_Size^{1}) * (W / 2 / Patch_Size^{1}), embed_dims] ->
         # [B, embed_dims, (H / 2 / Patch_Size^{1}), (W / 2 / Patch_Size^{1})]
         x = x.reshape(B, H, W, -1).permute(0, 3, 1, 2).contiguous()
+        # 添加FPN特征
+        outs.append(x)
+
         # [B, (H / 2 / Patch_Size^{2}) * (W / 2 / Patch_Size^{2}), embed_dims]
         x, (H, W) = self.patch_embed_b(x)
         for i, blk in enumerate(self.blocks_b):
             x = blk(x, H, W, self.relative_pos_b)
-
         # [B, (H / 2 / Patch_Size^{2}) * (W / 2 / Patch_Size^{2}), embed_dims] ->
         # [B, embed_dims, (H / 2 / Patch_Size^{2}), (W / 2 / Patch_Size^{2})]
         x = x.reshape(B, H, W, -1).permute(0, 3, 1, 2).contiguous()
+        # 添加FPN特征
+        outs.append(x)
+
         # [B, (H / 2 / Patch_Size^{3}) * (W / 2 / Patch_Size^{3}), embed_dims]
         x, (H, W) = self.patch_embed_c(x)
         for i, blk in enumerate(self.blocks_c):
             x = blk(x, H, W, self.relative_pos_c)
-
         # [B, (H / 2 / Patch_Size^{3}) * (W / 2 / Patch_Size^{3}), embed_dims] ->
         # [B, embed_dims, (H / 2 / Patch_Size^{3}), (W / 2 / Patch_Size^{3})]
         x = x.reshape(B, H, W, -1).permute(0, 3, 1, 2).contiguous()
+        # 添加FPN特征
+        outs.append(x)
+
         # [B, (H / 2 / Patch_Size^{4}) * (W / 2 / Patch_Size^{4}), embed_dims]
         x, (H, W) = self.patch_embed_d(x)
         for i, blk in enumerate(self.blocks_d):
             x = blk(x, H, W, self.relative_pos_d)
-
-        B, N, C = x.shape
         # [B, (H / 2 / Patch_Size^{4}) * (W / 2 / Patch_Size^{4}), embed_dims] ->
-        # [B, fc_dim, (H / 2 / Patch_Size^{4}), (W / 2 / Patch_Size^{4})]
-        x = self._fc(x.permute(0, 2, 1).reshape(B, C, H, W))
-        x = self._bn(x)
-        x = self._swish(x)
-        # [B, fc_dim, (H / 2 / Patch_Size^{4}), (W / 2 / Patch_Size^{4})] ->
-        # [B, fc_dim, 1, 1] -> [B, fc_dim]
-        x = self._avg_pooling(x).flatten(start_dim=1)
-        x = self._drop(x)
-        x = self.pre_logits(x)
+        # [B, embed_dims, (H / 2 / Patch_Size^{4}), (W / 2 / Patch_Size^{4})]
+        x = x.reshape(B, H, W, -1).permute(0, 3, 1, 2).contiguous()
+        # 添加FPN特征
+        outs.append(x)
 
-        return x
+        # 输出多尺度特征
+        return outs
 
     def forward(self, x):
-        x = self.forward_features(x)
-        x = self.head(x)
-        return x
+        outs = self.forward_features(x)
+        outs = tuple(outs)
+
+        return outs
 
 
 if __name__ == '__main__':
