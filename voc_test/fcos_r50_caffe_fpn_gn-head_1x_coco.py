@@ -1,17 +1,17 @@
 dataset_type = 'CocoDataset'
 data_root = 'D:/MyCode/Dataset/voc2007/coco/'
 img_norm_cfg = dict(
-    mean=[123.675, 116.28, 103.53], std=[58.395, 57.12, 57.375], to_rgb=True)
+    mean=[102.9801, 115.9465, 122.7717], std=[1.0, 1.0, 1.0], to_rgb=False)
 train_pipeline = [
     dict(type='LoadImageFromFile'),
     dict(type='LoadAnnotations', with_bbox=True),
-    dict(type='Resize', img_scale=(512, 512), keep_ratio=False),
+    dict(type='Resize', img_scale=(1333, 800), keep_ratio=True),
     dict(type='RandomFlip', flip_ratio=0.5),
     dict(
         type='Normalize',
-        mean=[123.675, 116.28, 103.53],
-        std=[58.395, 57.12, 57.375],
-        to_rgb=True),
+        mean=[102.9801, 115.9465, 122.7717],
+        std=[1.0, 1.0, 1.0],
+        to_rgb=False),
     dict(type='Pad', size_divisor=32),
     dict(type='DefaultFormatBundle'),
     dict(type='Collect', keys=['img', 'gt_bboxes', 'gt_labels'])
@@ -20,16 +20,16 @@ test_pipeline = [
     dict(type='LoadImageFromFile'),
     dict(
         type='MultiScaleFlipAug',
-        img_scale=(300, 300),
+        img_scale=(1333, 800),
         flip=False,
         transforms=[
             dict(type='Resize', keep_ratio=True),
             dict(type='RandomFlip'),
             dict(
                 type='Normalize',
-                mean=[123.675, 116.28, 103.53],
-                std=[58.395, 57.12, 57.375],
-                to_rgb=True),
+                mean=[102.9801, 115.9465, 122.7717],
+                std=[1.0, 1.0, 1.0],
+                to_rgb=False),
             dict(type='Pad', size_divisor=32),
             dict(type='ImageToTensor', keys=['img']),
             dict(type='Collect', keys=['img'])
@@ -46,13 +46,13 @@ data = dict(
         pipeline=[
             dict(type='LoadImageFromFile'),
             dict(type='LoadAnnotations', with_bbox=True),
-            dict(type='Resize', img_scale=(512, 512), keep_ratio=False),
+            dict(type='Resize', img_scale=(1333, 800), keep_ratio=True),
             dict(type='RandomFlip', flip_ratio=0.5),
             dict(
                 type='Normalize',
-                mean=[123.675, 116.28, 103.53],
-                std=[58.395, 57.12, 57.375],
-                to_rgb=True),
+                mean=[102.9801, 115.9465, 122.7717],
+                std=[1.0, 1.0, 1.0],
+                to_rgb=False),
             dict(type='Pad', size_divisor=32),
             dict(type='DefaultFormatBundle'),
             dict(type='Collect', keys=['img', 'gt_bboxes', 'gt_labels'])
@@ -70,16 +70,16 @@ data = dict(
             dict(type='LoadImageFromFile'),
             dict(
                 type='MultiScaleFlipAug',
-                img_scale=(300, 300),
+                img_scale=(1333, 800),
                 flip=False,
                 transforms=[
                     dict(type='Resize', keep_ratio=True),
                     dict(type='RandomFlip'),
                     dict(
                         type='Normalize',
-                        mean=[123.675, 116.28, 103.53],
-                        std=[58.395, 57.12, 57.375],
-                        to_rgb=True),
+                        mean=[102.9801, 115.9465, 122.7717],
+                        std=[1.0, 1.0, 1.0],
+                        to_rgb=False),
                     dict(type='Pad', size_divisor=32),
                     dict(type='ImageToTensor', keys=['img']),
                     dict(type='Collect', keys=['img'])
@@ -98,16 +98,16 @@ data = dict(
             dict(type='LoadImageFromFile'),
             dict(
                 type='MultiScaleFlipAug',
-                img_scale=(300, 300),
+                img_scale=(1333, 800),
                 flip=False,
                 transforms=[
                     dict(type='Resize', keep_ratio=True),
                     dict(type='RandomFlip'),
                     dict(
                         type='Normalize',
-                        mean=[123.675, 116.28, 103.53],
-                        std=[58.395, 57.12, 57.375],
-                        to_rgb=True),
+                        mean=[102.9801, 115.9465, 122.7717],
+                        std=[1.0, 1.0, 1.0],
+                        to_rgb=False),
                     dict(type='Pad', size_divisor=32),
                     dict(type='ImageToTensor', keys=['img']),
                     dict(type='Collect', keys=['img'])
@@ -118,16 +118,21 @@ data = dict(
                  'motorbike', 'person', 'pottedplant', 'sheep', 'sofa',
                  'train', 'tvmonitor')))
 evaluation = dict(interval=1, metric='bbox')
-optimizer = dict(type='SGD', lr=0.02, momentum=0.9, weight_decay=0.0001)
-optimizer_config = dict(grad_clip=None)
+optimizer = dict(
+    type='SGD',
+    lr=0.01,
+    momentum=0.9,
+    weight_decay=0.0001,
+    paramwise_cfg=dict(bias_lr_mult=2.0, bias_decay_mult=0.0))
+optimizer_config = dict(grad_clip=dict(max_norm=35, norm_type=2))
 lr_config = dict(
     policy='step',
-    warmup='linear',
+    warmup='constant',
     warmup_iters=500,
-    warmup_ratio=0.001,
+    warmup_ratio=0.3333333333333333,
     step=[8, 11])
-runner = dict(type='EpochBasedRunner', max_epochs=20)
-checkpoint_config = dict(interval=1, create_symlink=False)
+runner = dict(type='EpochBasedRunner', max_epochs=12)
+checkpoint_config = dict(interval=1)
 log_config = dict(interval=50, hooks=[dict(type='TextLoggerHook')])
 custom_hooks = [dict(type='NumClassCheckHook')]
 dist_params = dict(backend='nccl')
@@ -142,41 +147,31 @@ classes = ('aeroplane', 'bicycle', 'bird', 'boat', 'bottle', 'bus', 'car',
            'cat', 'chair', 'cow', 'diningtable', 'dog', 'horse', 'motorbike',
            'person', 'pottedplant', 'sheep', 'sofa', 'train', 'tvmonitor')
 model = dict(
-    type='MTFire',
+    type='FCOS',
     backbone=dict(
-        type='MTNet',
-        img_size=512,
-        in_chans=3,
-        num_classes=20,
-        embed_dims=[46, 92, 184, 368],
-        stem_channel=16,
-        fc_dim=1280,
-        num_heads=[1, 2, 4, 8],
-        mlp_ratios=[3.6, 3.6, 3.6, 3.6],
-        qkv_bias=True,
-        qk_scale=None,
-        representation_size=None,
-        drop_rate=0.0,
-        attn_drop_rate=0.0,
-        drop_path_rate=0.0,
-        hybrid_backbone=None,
-        norm_layer=None,
-        depths=[2, 2, 10, 2],
-        qk_ratio=1,
-        sr_ratios=[8, 4, 2, 1],
-        dp=0.1),
+        type='ResNet',
+        depth=50,
+        num_stages=4,
+        out_indices=(0, 1, 2, 3),
+        frozen_stages=1,
+        norm_cfg=dict(type='BN', requires_grad=False),
+        norm_eval=True,
+        style='caffe',
+        init_cfg=dict(
+            type='Pretrained',
+            checkpoint='open-mmlab://detectron/resnet50_caffe')),
     neck=dict(
         type='FPN',
-        in_channels=[46, 92, 184, 368],
-        out_channels=46,
-        start_level=0,
-        num_outs=5,
+        in_channels=[256, 512, 1024, 2048],
+        out_channels=256,
+        start_level=1,
         add_extra_convs='on_output',
+        num_outs=5,
         relu_before_extra_convs=True),
     bbox_head=dict(
         type='FCOSHead',
         num_classes=20,
-        in_channels=46,
+        in_channels=256,
         stacked_convs=4,
         feat_channels=256,
         strides=[8, 16, 32, 64, 128],
@@ -205,6 +200,6 @@ model = dict(
         score_thr=0.05,
         nms=dict(type='nms', iou_threshold=0.5),
         max_per_img=100))
-work_dir = '../fire_detection'
+work_dir = '../voc_test'
 auto_resume = False
 gpu_ids = [0]
