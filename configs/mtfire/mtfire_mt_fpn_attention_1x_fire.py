@@ -8,7 +8,8 @@ _base_ = [
 
 dataset_type = 'CocoDataset'
 # data_root = '/home/taowenyin/MyCode/Dataset/voc2012/coco/'
-data_root = 'D:/MyCode/Dataset/voc2007/coco/'
+# data_root = 'D:/MyCode/Dataset/voc2007/coco/'
+data_root = '/mnt/dataset/voc2012/coco/'
 
 classes = ('aeroplane', 'bicycle', 'bird', 'boat', 'bottle', 'bus', 'car',
            'cat', 'chair', 'cow', 'diningtable', 'dog', 'horse',
@@ -113,10 +114,10 @@ test_pipeline = [
     dict(type='LoadImageFromFile'),
     dict(
         type='MultiScaleFlipAug',
-        img_scale=(300, 300),
+        img_scale=(512, 512),
         flip=False,
         transforms=[
-            dict(type='Resize', keep_ratio=True),
+            dict(type='Resize', img_scale=(512, 512), keep_ratio=False),
             dict(type='RandomFlip'),
             dict(type='Normalize', **img_norm_cfg),
             dict(type='Pad', size_divisor=32),
@@ -126,8 +127,8 @@ test_pipeline = [
 ]
 
 data = dict(
-    samples_per_gpu=2, # Batch Size
-    workers_per_gpu=2,
+    samples_per_gpu=8, # Batch Size
+    workers_per_gpu=8,
     train=dict(
         type=dataset_type,
         ann_file=data_root + 'annotations/instances_train2017.json',
