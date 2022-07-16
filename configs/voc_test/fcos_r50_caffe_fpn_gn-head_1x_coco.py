@@ -4,8 +4,8 @@ _base_ = [
 ]
 
 dataset_type = 'CocoDataset'
-# data_root = '/mnt/dataset/voc2012/coco/'
-data_root = 'D:/MyCode/Dataset/voc2007/coco/'
+data_root = '/mnt/dataset/voc2012/coco/'
+# data_root = 'D:/MyCode/Dataset/voc2007/coco/'
 
 classes = ('aeroplane', 'bicycle', 'bird', 'boat', 'bottle', 'bus', 'car',
            'cat', 'chair', 'cow', 'diningtable', 'dog', 'horse',
@@ -130,3 +130,5 @@ lr_config = dict(
     warmup_ratio=1.0 / 3,
     step=[8, 11])
 runner = dict(type='EpochBasedRunner', max_epochs=12)
+
+checkpoint_config = dict(create_symlink=False)
