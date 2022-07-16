@@ -39,7 +39,11 @@ model = dict(
         depths=[2, 2, 10, 2],
         qk_ratio=1,
         sr_ratios=[8, 4, 2, 1],
-        dp=0.1
+        dp=0.1,
+        init_cfg=dict(
+            # type='Pretrained',
+            # checkpoint='../checkpoints/cmt_tiny.pth'
+        )
     ),
     neck=dict(
         type='FPN',

@@ -1,5 +1,5 @@
 dataset_type = 'CocoDataset'
-data_root = 'D:/MyCode/Dataset/voc2007/coco/'
+data_root = '/home/taowenyin/MyCode/Dataset/voc2012/coco/'
 img_norm_cfg = dict(
     mean=[123.675, 116.28, 103.53], std=[58.395, 57.12, 57.375], to_rgb=True)
 train_pipeline = [
@@ -20,10 +20,10 @@ test_pipeline = [
     dict(type='LoadImageFromFile'),
     dict(
         type='MultiScaleFlipAug',
-        img_scale=(300, 300),
+        img_scale=(512, 512),
         flip=False,
         transforms=[
-            dict(type='Resize', keep_ratio=True),
+            dict(type='Resize', img_scale=(512, 512), keep_ratio=False),
             dict(type='RandomFlip'),
             dict(
                 type='Normalize',
@@ -36,13 +36,13 @@ test_pipeline = [
         ])
 ]
 data = dict(
-    samples_per_gpu=2,
-    workers_per_gpu=2,
+    samples_per_gpu=8,
+    workers_per_gpu=8,
     train=dict(
         type='CocoDataset',
         ann_file=
-        'D:/MyCode/Dataset/voc2007/coco/annotations/instances_train2017.json',
-        img_prefix='D:/MyCode/Dataset/voc2007/coco/train2017/',
+        '/home/taowenyin/MyCode/Dataset/voc2012/coco/annotations/instances_train2017.json',
+        img_prefix='/home/taowenyin/MyCode/Dataset/voc2012/coco/train2017/',
         pipeline=[
             dict(type='LoadImageFromFile'),
             dict(type='LoadAnnotations', with_bbox=True),
@@ -64,16 +64,17 @@ data = dict(
     val=dict(
         type='CocoDataset',
         ann_file=
-        'D:/MyCode/Dataset/voc2007/coco/annotations/instances_val2017.json',
-        img_prefix='D:/MyCode/Dataset/voc2007/coco/val2017/',
+        '/home/taowenyin/MyCode/Dataset/voc2012/coco/annotations/instances_val2017.json',
+        img_prefix='/home/taowenyin/MyCode/Dataset/voc2012/coco/val2017/',
         pipeline=[
             dict(type='LoadImageFromFile'),
             dict(
                 type='MultiScaleFlipAug',
-                img_scale=(300, 300),
+                img_scale=(512, 512),
                 flip=False,
                 transforms=[
-                    dict(type='Resize', keep_ratio=True),
+                    dict(
+                        type='Resize', img_scale=(512, 512), keep_ratio=False),
                     dict(type='RandomFlip'),
                     dict(
                         type='Normalize',
@@ -92,16 +93,17 @@ data = dict(
     test=dict(
         type='CocoDataset',
         ann_file=
-        'D:/MyCode/Dataset/voc2007/coco/annotations/instances_val2017.json',
-        img_prefix='D:/MyCode/Dataset/voc2007/coco/val2017/',
+        '/home/taowenyin/MyCode/Dataset/voc2012/coco/annotations/instances_val2017.json',
+        img_prefix='/home/taowenyin/MyCode/Dataset/voc2012/coco/val2017/',
         pipeline=[
             dict(type='LoadImageFromFile'),
             dict(
                 type='MultiScaleFlipAug',
-                img_scale=(300, 300),
+                img_scale=(512, 512),
                 flip=False,
                 transforms=[
-                    dict(type='Resize', keep_ratio=True),
+                    dict(
+                        type='Resize', img_scale=(512, 512), keep_ratio=False),
                     dict(type='RandomFlip'),
                     dict(
                         type='Normalize',
@@ -164,7 +166,9 @@ model = dict(
         depths=[2, 2, 10, 2],
         qk_ratio=1,
         sr_ratios=[8, 4, 2, 1],
-        dp=0.1),
+        dp=0.1,
+        init_cfg=dict(
+            type='Pretrained', checkpoint='../checkpoints/cmt_tiny.pth')),
     neck=dict(
         type='FPN',
         in_channels=[46, 92, 184, 368],
@@ -205,6 +209,6 @@ model = dict(
         score_thr=0.05,
         nms=dict(type='nms', iou_threshold=0.5),
         max_per_img=100))
-work_dir = '../fire_detection'
+work_dir = '../fire_detection/'
 auto_resume = False
 gpu_ids = [0]
