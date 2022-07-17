@@ -96,8 +96,8 @@ test_pipeline = [
         ])
 ]
 data = dict(
-    samples_per_gpu=2,
-    workers_per_gpu=2,
+    samples_per_gpu=4,
+    workers_per_gpu=4,
     train=dict(
         type=dataset_type,
         ann_file=data_root + 'annotations/instances_train2017.json',
@@ -130,5 +130,7 @@ lr_config = dict(
     warmup_ratio=1.0 / 3,
     step=[8, 11])
 runner = dict(type='EpochBasedRunner', max_epochs=12)
+
+load_from = '../checkpoints/fcos_r50_caffe_fpn_gn-head_1x_coco-821213aa.pth'
 
 checkpoint_config = dict(create_symlink=False)
