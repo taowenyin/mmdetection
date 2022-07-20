@@ -41,8 +41,8 @@ model = dict(
         sr_ratios=[8, 4, 2, 1],
         dp=0.1,
         init_cfg=dict(
-            # type='Pretrained',
-            # checkpoint='../checkpoints/cmt_tiny.pth'
+            type='Pretrained',
+            checkpoint='../checkpoints/cmt_tiny.pth'
         )
     ),
     neck=dict(
@@ -99,7 +99,6 @@ model = dict(
 
 img_norm_cfg = dict(
     mean=[123.675, 116.28, 103.53], std=[58.395, 57.12, 57.375], to_rgb=True)
-
 # img_norm_cfg = dict(
 #     mean=[102.9801, 115.9465, 122.7717], std=[1.0, 1.0, 1.0], to_rgb=False)
 
@@ -153,6 +152,6 @@ data = dict(
         pipeline=test_pipeline)
 )
 
-runner = dict(type='EpochBasedRunner', max_epochs=20)
+runner = dict(type='EpochBasedRunner', max_epochs=12)
 
 checkpoint_config = dict(create_symlink=False)
