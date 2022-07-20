@@ -42,7 +42,7 @@ model = dict(
         dp=0.1,
         init_cfg=dict(
             type='Pretrained',
-            checkpoint='../checkpoints/cmt_tiny.pth'
+            checkpoint='./checkpoints/cmt_tiny.pth'
         )
     ),
     neck=dict(
@@ -130,8 +130,8 @@ test_pipeline = [
 ]
 
 data = dict(
-    samples_per_gpu=8, # Batch Size
-    workers_per_gpu=8,
+    samples_per_gpu=4, # Batch Size
+    workers_per_gpu=4,
     train=dict(
         type=dataset_type,
         ann_file=data_root + 'annotations/instances_train2017.json',
@@ -155,3 +155,5 @@ data = dict(
 runner = dict(type='EpochBasedRunner', max_epochs=12)
 
 checkpoint_config = dict(create_symlink=False)
+
+work_dir = './fire_detection/mtfire'

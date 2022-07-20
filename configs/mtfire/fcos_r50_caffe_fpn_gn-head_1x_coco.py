@@ -136,3 +136,5 @@ runner = dict(type='EpochBasedRunner', max_epochs=12)
 load_from = './checkpoints/fcos_r50_caffe_fpn_gn-head_1x_coco-821213aa.pth'
 
 checkpoint_config = dict(create_symlink=False)
+
+work_dir = './fire_detection/fcos'

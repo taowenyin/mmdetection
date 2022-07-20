@@ -146,7 +146,8 @@ def add_mim_extension():
             # set `copy` mode here since symlink fails on Windows.
             mode = 'copy'
         else:
-            mode = 'symlink'
+            # mode = 'symlink'
+            mode = 'copy'
     elif 'sdist' in sys.argv or 'bdist_wheel' in sys.argv:
         # installed by `pip install .`
         # or create source distribution by `python setup.py sdist`
