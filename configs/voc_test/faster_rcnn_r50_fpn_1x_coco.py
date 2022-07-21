@@ -5,8 +5,8 @@ _base_ = [
 ]
 
 dataset_type = 'CocoDataset'
-# data_root = '/mnt/dataset/voc2012/coco/'
-data_root = 'D:/MyCode/Dataset/voc2007/coco/'
+data_root = '/mnt/dataset/voc2012/coco/'
+# data_root = 'D:/MyCode/Dataset/voc2007/coco/'
 
 classes = ('aeroplane', 'bicycle', 'bird', 'boat', 'bottle', 'bus', 'car',
            'cat', 'chair', 'cow', 'diningtable', 'dog', 'horse',
@@ -41,3 +41,5 @@ runner = dict(type='EpochBasedRunner', max_epochs=20)
 load_from = '../checkpoints/faster_rcnn_r50_fpn_1x_coco_20200130-047c8118.pth'
 
 checkpoint_config = dict(create_symlink=False)
+
+work_dir = './voc_test/fasterrcnn'

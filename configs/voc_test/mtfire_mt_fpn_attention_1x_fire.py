@@ -1,48 +1,62 @@
+# -*- coding: utf-8 -*-
+
 _base_ = [
     '../_base_/datasets/coco_detection.py',
-    '../_base_/schedules/schedule_1x.py', '../_base_/default_runtime.py'
+    '../_base_/schedules/schedule_1x.py',
+    '../_base_/default_runtime.py'
 ]
 
 dataset_type = 'CocoDataset'
-
-# Linux
-# data_root = '/home/taowenyin/MyCode/Dataset/fire_coco/'
-# MatPool
-data_root = '/mnt/dataset/fire_coco/'
-# Windows
+data_root = '/mnt/dataset/voc2012/coco/'
 # data_root = 'D:/MyCode/Dataset/voc2007/coco/'
-# MAC
-# data_root = '/Users/taowenyin/Database/voc2012/coco/'
 
-classes = ('fire',)
+classes = ('aeroplane', 'bicycle', 'bird', 'boat', 'bottle', 'bus', 'car',
+           'cat', 'chair', 'cow', 'diningtable', 'dog', 'horse',
+           'motorbike', 'person', 'pottedplant', 'sheep', 'sofa', 'train',
+           'tvmonitor')
 
-# model settings
 model = dict(
-    type='FCOS',
+    type='MTFire',
     backbone=dict(
-        type='ResNet',
-        depth=50,
-        num_stages=4,
-        out_indices=(0, 1, 2, 3),
-        frozen_stages=1,
-        norm_cfg=dict(type='BN', requires_grad=False),
-        norm_eval=True,
-        style='caffe',
+        type='MTNet',
+        img_size=512,
+        in_chans=3,
+        num_classes=20,
+        embed_dims=[46, 92, 184, 368],
+        stem_channel=16,
+        fc_dim=1280,
+        num_heads=[1, 2, 4, 8],
+        mlp_ratios=[3.6, 3.6, 3.6, 3.6],
+        qkv_bias=True,
+        qk_scale=None,
+        representation_size=None,
+        drop_rate=0.,
+        attn_drop_rate=0.,
+        drop_path_rate=0.,
+        hybrid_backbone=None,
+        norm_layer=None,
+        depths=[2, 2, 10, 2],
+        qk_ratio=1,
+        sr_ratios=[8, 4, 2, 1],
+        dp=0.1,
         init_cfg=dict(
             type='Pretrained',
-            checkpoint='open-mmlab://detectron/resnet50_caffe')),
+            checkpoint='../checkpoints/cmt_tiny.pth'
+        )
+    ),
     neck=dict(
         type='FPN',
-        in_channels=[256, 512, 1024, 2048],
-        out_channels=256,
-        start_level=1,
-        add_extra_convs='on_output',  # use P5
+        in_channels=[46, 92, 184, 368],
+        out_channels=46,
+        start_level=0,
         num_outs=5,
-        relu_before_extra_convs=True),
+        add_extra_convs='on_output',
+        relu_before_extra_convs=True,
+    ),
     bbox_head=dict(
         type='FCOSHead',
-        num_classes=1,
-        in_channels=256,
+        num_classes=20,
+        in_channels=46,
         stacked_convs=4,
         feat_channels=256,
         strides=[8, 16, 32, 64, 128],
@@ -51,11 +65,17 @@ model = dict(
             use_sigmoid=True,
             gamma=2.0,
             alpha=0.25,
-            loss_weight=1.0),
-        loss_bbox=dict(type='IoULoss', loss_weight=1.0),
+            loss_weight=1.0
+        ),
+        loss_bbox=dict(
+            type='IoULoss',
+            loss_weight=1.0
+        ),
         loss_centerness=dict(
-            type='CrossEntropyLoss', use_sigmoid=True, loss_weight=1.0)),
-    # training and testing settings
+            type='CrossEntropyLoss',
+            use_sigmoid=True,
+            loss_weight=1.0)
+    ),
     train_cfg=dict(
         assigner=dict(
             type='MaxIoUAssigner',
@@ -65,33 +85,41 @@ model = dict(
             ignore_iof_thr=-1),
         allowed_border=-1,
         pos_weight=-1,
-        debug=False),
+        debug=False
+    ),
     test_cfg=dict(
         nms_pre=1000,
         min_bbox_size=0,
         score_thr=0.05,
         nms=dict(type='nms', iou_threshold=0.5),
-        max_per_img=100))
+        max_per_img=100
+    )
+)
+
 img_norm_cfg = dict(
-    mean=[102.9801, 115.9465, 122.7717], std=[1.0, 1.0, 1.0], to_rgb=False)
+    mean=[123.675, 116.28, 103.53], std=[58.395, 57.12, 57.375], to_rgb=True)
+# img_norm_cfg = dict(
+#     mean=[102.9801, 115.9465, 122.7717], std=[1.0, 1.0, 1.0], to_rgb=False)
+
 train_pipeline = [
     dict(type='LoadImageFromFile'),
     dict(type='LoadAnnotations', with_bbox=True),
-    dict(type='Resize', img_scale=(1333, 800), keep_ratio=True),
+    dict(type='Resize', img_scale=(512, 512), keep_ratio=False),
     dict(type='RandomFlip', flip_ratio=0.5),
     dict(type='Normalize', **img_norm_cfg),
     dict(type='Pad', size_divisor=32),
     dict(type='DefaultFormatBundle'),
     dict(type='Collect', keys=['img', 'gt_bboxes', 'gt_labels']),
 ]
+
 test_pipeline = [
     dict(type='LoadImageFromFile'),
     dict(
         type='MultiScaleFlipAug',
-        img_scale=(1333, 800),
+        img_scale=(512, 512),
         flip=False,
         transforms=[
-            dict(type='Resize', keep_ratio=True),
+            dict(type='Resize', img_scale=(512, 512), keep_ratio=False),
             dict(type='RandomFlip'),
             dict(type='Normalize', **img_norm_cfg),
             dict(type='Pad', size_divisor=32),
@@ -99,9 +127,10 @@ test_pipeline = [
             dict(type='Collect', keys=['img']),
         ])
 ]
+
 data = dict(
-    samples_per_gpu=4,
-    workers_per_gpu=4,
+    samples_per_gpu=8, # Batch Size
+    workers_per_gpu=8,
     train=dict(
         type=dataset_type,
         ann_file=data_root + 'annotations/instances_train2017.json',
@@ -121,22 +150,9 @@ data = dict(
         img_prefix=data_root + 'val2017/',
         pipeline=test_pipeline)
 )
-# optimizer
-optimizer = dict(
-    lr=0.01, paramwise_cfg=dict(bias_lr_mult=2., bias_decay_mult=0.))
-optimizer_config = dict(
-    _delete_=True, grad_clip=dict(max_norm=35, norm_type=2))
-# learning policy
-lr_config = dict(
-    policy='step',
-    warmup='constant',
-    warmup_iters=500,
-    warmup_ratio=1.0 / 3,
-    step=[8, 11])
-runner = dict(type='EpochBasedRunner', max_epochs=12)
 
-load_from = './checkpoints/fcos_r50_caffe_fpn_gn-head_1x_coco-821213aa.pth'
+runner = dict(type='EpochBasedRunner', max_epochs=12)
 
 checkpoint_config = dict(create_symlink=False)
 
-work_dir = './fire_detection/fcos'
+work_dir = './voc_test/mtfire'

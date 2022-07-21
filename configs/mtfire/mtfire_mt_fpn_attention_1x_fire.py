@@ -11,17 +11,14 @@ dataset_type = 'CocoDataset'
 # Linux
 # data_root = '/home/taowenyin/MyCode/Dataset/fire_coco/'
 # MatPool
-# data_root = '/mnt/dataset/fire_coco/'
+data_root = '/mnt/dataset/fire_coco/'
 # Windows
 # data_root = 'D:/MyCode/Dataset/voc2007/coco/'
 # MAC
-data_root = '/Users/taowenyin/Database/voc2012/coco/'
+# data_root = '/Users/taowenyin/Database/voc2012/coco/'
 
 
-classes = ('aeroplane', 'bicycle', 'bird', 'boat', 'bottle', 'bus', 'car',
-           'cat', 'chair', 'cow', 'diningtable', 'dog', 'horse',
-           'motorbike', 'person', 'pottedplant', 'sheep', 'sofa', 'train',
-           'tvmonitor')
+classes = ('fire',)
 
 model = dict(
     type='MTFire',
@@ -29,7 +26,7 @@ model = dict(
         type='MTNet',
         img_size=512,
         in_chans=3,
-        num_classes=20,
+        num_classes=1,
         embed_dims=[46, 92, 184, 368],
         stem_channel=16,
         fc_dim=1280,
@@ -63,7 +60,7 @@ model = dict(
     ),
     bbox_head=dict(
         type='FCOSHead',
-        num_classes=20,
+        num_classes=1,
         in_channels=46,
         stacked_convs=4,
         feat_channels=256,

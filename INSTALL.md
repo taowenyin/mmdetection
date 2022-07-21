@@ -12,16 +12,19 @@ FCOS训练指令
 
 ```bash
 python tools/train.py ./configs/mtfire/fcos_r50_caffe_fpn_gn-head_1x_coco.py
+python tools/train.py ./configs/voc_test/fcos_r50_caffe_fpn_gn-head_1x_coco.py
 ```
 
 Faster-RCNN训练指令
 
 ```bash
 python tools/train.py ./configs/mtfire/faster_rcnn_r50_fpn_1x_coco.py
+python tools/train.py ./configs/voc_test/faster_rcnn_r50_fpn_1x_coco.py
 ```
 
 MTFire训练指令
 
 ```bash
 python tools/train.py ./configs/mtfire/mtfire_mt_fpn_attention_1x_fire.py
+python tools/train.py ./configs/voc_test/mtfire_mt_fpn_attention_1x_fire.py
 ```
