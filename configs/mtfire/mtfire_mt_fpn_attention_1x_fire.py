@@ -7,9 +7,16 @@ _base_ = [
 ]
 
 dataset_type = 'CocoDataset'
-# data_root = '/home/taowenyin/MyCode/Dataset/voc2012/coco/'
+
+# Linux
+# data_root = '/home/taowenyin/MyCode/Dataset/fire_coco/'
+# MatPool
+# data_root = '/mnt/dataset/fire_coco/'
+# Windows
 # data_root = 'D:/MyCode/Dataset/voc2007/coco/'
-data_root = '/mnt/dataset/voc2012/coco/'
+# MAC
+data_root = '/Users/taowenyin/Database/voc2012/coco/'
+
 
 classes = ('aeroplane', 'bicycle', 'bird', 'boat', 'bottle', 'bus', 'car',
            'cat', 'chair', 'cow', 'diningtable', 'dog', 'horse',
