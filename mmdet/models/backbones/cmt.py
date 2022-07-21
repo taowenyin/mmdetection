@@ -184,7 +184,7 @@ class MemoryEfficientSwish(nn.Module):
 
 
 @BACKBONES.register_module()
-class MTNet(BaseModule):
+class CMT(BaseModule):
     """
     MTFire的Backbone
 
@@ -217,7 +217,7 @@ class MTNet(BaseModule):
                  attn_drop_rate=0., drop_path_rate=0., hybrid_backbone=None, norm_layer=None,
                  depths=None, qk_ratio=1, sr_ratios=None, dp=0.1,
                  init_cfg=None):
-        super(MTNet, self).__init__(init_cfg)
+        super(CMT, self).__init__(init_cfg)
 
         if sr_ratios is None:
             sr_ratios = [8, 4, 2, 1]

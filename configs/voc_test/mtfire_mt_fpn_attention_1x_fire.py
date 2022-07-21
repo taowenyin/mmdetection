@@ -7,8 +7,13 @@ _base_ = [
 ]
 
 dataset_type = 'CocoDataset'
-data_root = '/mnt/dataset/voc2012/coco/'
+
+# MatPool
+# data_root = '/mnt/dataset/voc2012/coco/'
+# Windows
 # data_root = 'D:/MyCode/Dataset/voc2007/coco/'
+# Linux
+data_root = '/home/taowenyin/MyCode/Dataset/voc2012/coco/'
 
 classes = ('aeroplane', 'bicycle', 'bird', 'boat', 'bottle', 'bus', 'car',
            'cat', 'chair', 'cow', 'diningtable', 'dog', 'horse',
@@ -18,7 +23,7 @@ classes = ('aeroplane', 'bicycle', 'bird', 'boat', 'bottle', 'bus', 'car',
 model = dict(
     type='MTFire',
     backbone=dict(
-        type='MTNet',
+        type='CMT',
         img_size=512,
         in_chans=3,
         num_classes=20,
@@ -41,7 +46,7 @@ model = dict(
         dp=0.1,
         init_cfg=dict(
             type='Pretrained',
-            checkpoint='../checkpoints/cmt_tiny.pth'
+            checkpoint='../checkpoints/cmt_tiny_mm.pth'
         )
     ),
     neck=dict(

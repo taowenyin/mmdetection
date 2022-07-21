@@ -1,5 +1,5 @@
 dataset_type = 'CocoDataset'
-data_root = '/Users/taowenyin/Database/voc2012/coco/'
+data_root = '/home/taowenyin/MyCode/Dataset/voc2012/coco/'
 img_norm_cfg = dict(
     mean=[123.675, 116.28, 103.53], std=[58.395, 57.12, 57.375], to_rgb=True)
 train_pipeline = [
@@ -36,13 +36,13 @@ test_pipeline = [
         ])
 ]
 data = dict(
-    samples_per_gpu=4,
-    workers_per_gpu=4,
+    samples_per_gpu=8,
+    workers_per_gpu=8,
     train=dict(
         type='CocoDataset',
         ann_file=
-        '/Users/taowenyin/Database/voc2012/coco/annotations/instances_train2017.json',
-        img_prefix='/Users/taowenyin/Database/voc2012/coco/train2017/',
+        '/home/taowenyin/MyCode/Dataset/voc2012/coco/annotations/instances_train2017.json',
+        img_prefix='/home/taowenyin/MyCode/Dataset/voc2012/coco/train2017/',
         pipeline=[
             dict(type='LoadImageFromFile'),
             dict(type='LoadAnnotations', with_bbox=True),
@@ -64,8 +64,8 @@ data = dict(
     val=dict(
         type='CocoDataset',
         ann_file=
-        '/Users/taowenyin/Database/voc2012/coco/annotations/instances_val2017.json',
-        img_prefix='/Users/taowenyin/Database/voc2012/coco/val2017/',
+        '/home/taowenyin/MyCode/Dataset/voc2012/coco/annotations/instances_val2017.json',
+        img_prefix='/home/taowenyin/MyCode/Dataset/voc2012/coco/val2017/',
         pipeline=[
             dict(type='LoadImageFromFile'),
             dict(
@@ -93,8 +93,8 @@ data = dict(
     test=dict(
         type='CocoDataset',
         ann_file=
-        '/Users/taowenyin/Database/voc2012/coco/annotations/instances_val2017.json',
-        img_prefix='/Users/taowenyin/Database/voc2012/coco/val2017/',
+        '/home/taowenyin/MyCode/Dataset/voc2012/coco/annotations/instances_val2017.json',
+        img_prefix='/home/taowenyin/MyCode/Dataset/voc2012/coco/val2017/',
         pipeline=[
             dict(type='LoadImageFromFile'),
             dict(
@@ -146,7 +146,7 @@ classes = ('aeroplane', 'bicycle', 'bird', 'boat', 'bottle', 'bus', 'car',
 model = dict(
     type='MTFire',
     backbone=dict(
-        type='MTNet',
+        type='CMT',
         img_size=512,
         in_chans=3,
         num_classes=20,
@@ -168,7 +168,7 @@ model = dict(
         sr_ratios=[8, 4, 2, 1],
         dp=0.1,
         init_cfg=dict(
-            type='Pretrained', checkpoint='./checkpoints/cmt_tiny.pth')),
+            type='Pretrained', checkpoint='../checkpoints/cmt_tiny_mm.pth')),
     neck=dict(
         type='FPN',
         in_channels=[46, 92, 184, 368],
@@ -209,6 +209,6 @@ model = dict(
         score_thr=0.05,
         nms=dict(type='nms', iou_threshold=0.5),
         max_per_img=100))
-work_dir = './fire_detection/mtfire'
+work_dir = '../voc_test/mtfire'
 auto_resume = False
 gpu_ids = [0]

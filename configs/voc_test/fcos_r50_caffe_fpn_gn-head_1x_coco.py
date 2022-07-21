@@ -4,8 +4,13 @@ _base_ = [
 ]
 
 dataset_type = 'CocoDataset'
-data_root = '/mnt/dataset/voc2012/coco/'
+
+# MatPool
+# data_root = '/mnt/dataset/voc2012/coco/'
+# Windows
 # data_root = 'D:/MyCode/Dataset/voc2007/coco/'
+# Linux
+data_root = '/home/taowenyin/MyCode/Dataset/voc2012/coco/'
 
 classes = ('aeroplane', 'bicycle', 'bird', 'boat', 'bottle', 'bus', 'car',
            'cat', 'chair', 'cow', 'diningtable', 'dog', 'horse',
