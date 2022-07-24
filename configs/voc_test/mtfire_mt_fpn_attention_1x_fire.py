@@ -9,11 +9,11 @@ _base_ = [
 dataset_type = 'CocoDataset'
 
 # MatPool
-data_root = '/mnt/dataset/voc2012/coco/'
+# data_root = '/mnt/dataset/voc2012/coco/'
 # Windows
 # data_root = 'D:/MyCode/Dataset/voc2007/coco/'
 # Linux
-# data_root = '/home/taowenyin/MyCode/Dataset/voc2012/coco/'
+data_root = '/home/taowenyin/MyCode/Dataset/voc2012/coco/'
 
 classes = ('aeroplane', 'bicycle', 'bird', 'boat', 'bottle', 'bus', 'car',
            'cat', 'chair', 'cow', 'diningtable', 'dog', 'horse',
@@ -36,7 +36,7 @@ model = dict(
         qk_scale=None,
         representation_size=None,
         drop_rate=0.,
-        frozen_stages=1,
+        frozen_stages=4,
         norm_eval=False,
         attn_drop_rate=0.,
         drop_path_rate=0.,
@@ -48,7 +48,7 @@ model = dict(
         dp=0.1,
         init_cfg=dict(
             type='Pretrained',
-            checkpoint='./checkpoints/cmt_tiny_mm_wo_rp.pth'
+            checkpoint='../checkpoints/cmt_tiny_mm_wo_rp.pth'
         )
     ),
     neck=dict(
@@ -103,10 +103,10 @@ model = dict(
     )
 )
 
-img_norm_cfg = dict(
-    mean=[123.675, 116.28, 103.53], std=[58.395, 57.12, 57.375], to_rgb=True)
 # img_norm_cfg = dict(
-#     mean=[102.9801, 115.9465, 122.7717], std=[1.0, 1.0, 1.0], to_rgb=False)
+#     mean=[123.675, 116.28, 103.53], std=[58.395, 57.12, 57.375], to_rgb=True)
+img_norm_cfg = dict(
+    mean=[102.9801, 115.9465, 122.7717], std=[1.0, 1.0, 1.0], to_rgb=False)
 
 train_pipeline = [
     dict(type='LoadImageFromFile'),
@@ -136,8 +136,8 @@ test_pipeline = [
 ]
 
 data = dict(
-    samples_per_gpu=8, # Batch Size
-    workers_per_gpu=8,
+    samples_per_gpu=4, # Batch Size
+    workers_per_gpu=4,
     train=dict(
         type=dataset_type,
         ann_file=data_root + 'annotations/instances_train2017.json',
@@ -157,6 +157,18 @@ data = dict(
         img_prefix=data_root + 'val2017/',
         pipeline=test_pipeline)
 )
+# # optimizer
+# optimizer = dict(
+#     lr=0.01, paramwise_cfg=dict(bias_lr_mult=2., bias_decay_mult=0.))
+# optimizer_config = dict(
+#     _delete_=True, grad_clip=dict(max_norm=35, norm_type=2))
+# # learning policy
+# lr_config = dict(
+#     policy='step',
+#     warmup='constant',
+#     warmup_iters=500,
+#     warmup_ratio=1.0 / 3,
+#     step=[8, 11])
 
 runner = dict(type='EpochBasedRunner', max_epochs=12)
 

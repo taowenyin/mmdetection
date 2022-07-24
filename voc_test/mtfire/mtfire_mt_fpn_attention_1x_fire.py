@@ -1,7 +1,7 @@
 dataset_type = 'CocoDataset'
-data_root = 'D:/MyCode/Dataset/voc2007/coco/'
+data_root = '/home/taowenyin/MyCode/Dataset/voc2012/coco/'
 img_norm_cfg = dict(
-    mean=[123.675, 116.28, 103.53], std=[58.395, 57.12, 57.375], to_rgb=True)
+    mean=[102.9801, 115.9465, 122.7717], std=[1.0, 1.0, 1.0], to_rgb=False)
 train_pipeline = [
     dict(type='LoadImageFromFile'),
     dict(type='LoadAnnotations', with_bbox=True),
@@ -9,9 +9,9 @@ train_pipeline = [
     dict(type='RandomFlip', flip_ratio=0.5),
     dict(
         type='Normalize',
-        mean=[123.675, 116.28, 103.53],
-        std=[58.395, 57.12, 57.375],
-        to_rgb=True),
+        mean=[102.9801, 115.9465, 122.7717],
+        std=[1.0, 1.0, 1.0],
+        to_rgb=False),
     dict(type='Pad', size_divisor=32),
     dict(type='DefaultFormatBundle'),
     dict(type='Collect', keys=['img', 'gt_bboxes', 'gt_labels'])
@@ -27,22 +27,22 @@ test_pipeline = [
             dict(type='RandomFlip'),
             dict(
                 type='Normalize',
-                mean=[123.675, 116.28, 103.53],
-                std=[58.395, 57.12, 57.375],
-                to_rgb=True),
+                mean=[102.9801, 115.9465, 122.7717],
+                std=[1.0, 1.0, 1.0],
+                to_rgb=False),
             dict(type='Pad', size_divisor=32),
             dict(type='ImageToTensor', keys=['img']),
             dict(type='Collect', keys=['img'])
         ])
 ]
 data = dict(
-    samples_per_gpu=8,
-    workers_per_gpu=8,
+    samples_per_gpu=4,
+    workers_per_gpu=4,
     train=dict(
         type='CocoDataset',
         ann_file=
-        'D:/MyCode/Dataset/voc2007/coco/annotations/instances_train2017.json',
-        img_prefix='D:/MyCode/Dataset/voc2007/coco/train2017/',
+        '/home/taowenyin/MyCode/Dataset/voc2012/coco/annotations/instances_train2017.json',
+        img_prefix='/home/taowenyin/MyCode/Dataset/voc2012/coco/train2017/',
         pipeline=[
             dict(type='LoadImageFromFile'),
             dict(type='LoadAnnotations', with_bbox=True),
@@ -50,9 +50,9 @@ data = dict(
             dict(type='RandomFlip', flip_ratio=0.5),
             dict(
                 type='Normalize',
-                mean=[123.675, 116.28, 103.53],
-                std=[58.395, 57.12, 57.375],
-                to_rgb=True),
+                mean=[102.9801, 115.9465, 122.7717],
+                std=[1.0, 1.0, 1.0],
+                to_rgb=False),
             dict(type='Pad', size_divisor=32),
             dict(type='DefaultFormatBundle'),
             dict(type='Collect', keys=['img', 'gt_bboxes', 'gt_labels'])
@@ -64,8 +64,8 @@ data = dict(
     val=dict(
         type='CocoDataset',
         ann_file=
-        'D:/MyCode/Dataset/voc2007/coco/annotations/instances_val2017.json',
-        img_prefix='D:/MyCode/Dataset/voc2007/coco/val2017/',
+        '/home/taowenyin/MyCode/Dataset/voc2012/coco/annotations/instances_val2017.json',
+        img_prefix='/home/taowenyin/MyCode/Dataset/voc2012/coco/val2017/',
         pipeline=[
             dict(type='LoadImageFromFile'),
             dict(
@@ -78,9 +78,9 @@ data = dict(
                     dict(type='RandomFlip'),
                     dict(
                         type='Normalize',
-                        mean=[123.675, 116.28, 103.53],
-                        std=[58.395, 57.12, 57.375],
-                        to_rgb=True),
+                        mean=[102.9801, 115.9465, 122.7717],
+                        std=[1.0, 1.0, 1.0],
+                        to_rgb=False),
                     dict(type='Pad', size_divisor=32),
                     dict(type='ImageToTensor', keys=['img']),
                     dict(type='Collect', keys=['img'])
@@ -93,8 +93,8 @@ data = dict(
     test=dict(
         type='CocoDataset',
         ann_file=
-        'D:/MyCode/Dataset/voc2007/coco/annotations/instances_val2017.json',
-        img_prefix='D:/MyCode/Dataset/voc2007/coco/val2017/',
+        '/home/taowenyin/MyCode/Dataset/voc2012/coco/annotations/instances_val2017.json',
+        img_prefix='/home/taowenyin/MyCode/Dataset/voc2012/coco/val2017/',
         pipeline=[
             dict(type='LoadImageFromFile'),
             dict(
@@ -107,9 +107,9 @@ data = dict(
                     dict(type='RandomFlip'),
                     dict(
                         type='Normalize',
-                        mean=[123.675, 116.28, 103.53],
-                        std=[58.395, 57.12, 57.375],
-                        to_rgb=True),
+                        mean=[102.9801, 115.9465, 122.7717],
+                        std=[1.0, 1.0, 1.0],
+                        to_rgb=False),
                     dict(type='Pad', size_divisor=32),
                     dict(type='ImageToTensor', keys=['img']),
                     dict(type='Collect', keys=['img'])
@@ -120,13 +120,18 @@ data = dict(
                  'motorbike', 'person', 'pottedplant', 'sheep', 'sofa',
                  'train', 'tvmonitor')))
 evaluation = dict(interval=1, metric='bbox')
-optimizer = dict(type='SGD', lr=0.02, momentum=0.9, weight_decay=0.0001)
-optimizer_config = dict(grad_clip=None)
+optimizer = dict(
+    type='SGD',
+    lr=0.01,
+    momentum=0.9,
+    weight_decay=0.0001,
+    paramwise_cfg=dict(bias_lr_mult=2.0, bias_decay_mult=0.0))
+optimizer_config = dict(grad_clip=dict(max_norm=35, norm_type=2))
 lr_config = dict(
     policy='step',
-    warmup='linear',
+    warmup='constant',
     warmup_iters=500,
-    warmup_ratio=0.001,
+    warmup_ratio=0.3333333333333333,
     step=[8, 11])
 runner = dict(type='EpochBasedRunner', max_epochs=12)
 checkpoint_config = dict(interval=1, create_symlink=False)
@@ -160,7 +165,7 @@ model = dict(
         representation_size=None,
         drop_rate=0.0,
         frozen_stages=4,
-        norm_eval=True,
+        norm_eval=False,
         attn_drop_rate=0.0,
         drop_path_rate=0.0,
         hybrid_backbone=None,
