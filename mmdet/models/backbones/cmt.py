@@ -5,6 +5,8 @@ from collections import OrderedDict
 from mmcv.runner import BaseModule
 from functools import partial
 from timm.models.layers import to_2tuple, DropPath, trunc_normal_
+from torch.nn.modules.batchnorm import _BatchNorm
+
 from ..builder import BACKBONES
 
 
@@ -201,6 +203,8 @@ class CMT(BaseModule):
         qk_scale:
         representation_size:
         drop_rate:
+        frozen_stages: 冻结的层
+        norm_eval: 确保归一化层冻结
         attn_drop_rate:
         drop_path_rate:
         hybrid_backbone:
@@ -211,11 +215,29 @@ class CMT(BaseModule):
         dp:
         init_cfg:
     """
-    def __init__(self, img_size=224, in_chans=3, num_classes=20, embed_dims=None,
-                 stem_channel=16, fc_dim=1280, num_heads=None, mlp_ratios=None,
-                 qkv_bias=True, qk_scale=None, representation_size=None, drop_rate=0.,
-                 attn_drop_rate=0., drop_path_rate=0., hybrid_backbone=None, norm_layer=None,
-                 depths=None, qk_ratio=1, sr_ratios=None, dp=0.1,
+    def __init__(self,
+                 img_size=224,
+                 in_chans=3,
+                 num_classes=20,
+                 embed_dims=None,
+                 stem_channel=16,
+                 fc_dim=1280,
+                 num_heads=None,
+                 mlp_ratios=None,
+                 qkv_bias=True,
+                 qk_scale=None,
+                 representation_size=None,
+                 drop_rate=0.,
+                 frozen_stages=1,
+                 norm_eval=True,
+                 attn_drop_rate=0.,
+                 drop_path_rate=0.,
+                 hybrid_backbone=None,
+                 norm_layer=None,
+                 depths=None,
+                 qk_ratio=1,
+                 sr_ratios=None,
+                 dp=0.1,
                  init_cfg=None):
         super(CMT, self).__init__(init_cfg)
 
@@ -234,6 +256,9 @@ class CMT(BaseModule):
         self.num_classes = num_classes
         self.num_features = self.embed_dim = embed_dims[-1]
         norm_layer = norm_layer or partial(nn.LayerNorm, eps=1e-6)
+
+        self.frozen_stages = frozen_stages
+        self.norm_eval = norm_eval
 
         self.stem_conv1 = nn.Conv2d(in_chans, stem_channel, kernel_size=3, stride=2, padding=1, bias=True)
         self.stem_relu1 = nn.GELU()
@@ -310,14 +335,10 @@ class CMT(BaseModule):
         else:
             self.pre_logits = nn.Identity()
 
-        # Classifier head
-        self._fc = nn.Conv2d(embed_dims[-1], fc_dim, kernel_size=1)
-        self._bn = nn.BatchNorm2d(fc_dim, eps=1e-5)
-        self._swish = MemoryEfficientSwish()
-        self._avg_pooling = nn.AdaptiveAvgPool2d(1)
-        self._drop = nn.Dropout(dp)
-        self.head = nn.Linear(fc_dim, num_classes) if num_classes > 0 else nn.Identity()
         self.apply(self._init_weights)
+
+        # 冻结网络
+        self._freeze_stages()
 
     def _init_weights(self, m):
         if isinstance(m, nn.Linear):
@@ -334,6 +355,41 @@ class CMT(BaseModule):
         elif isinstance(m, nn.BatchNorm2d):
             nn.init.constant_(m.bias, 0)
             nn.init.constant_(m.weight, 1.0)
+
+    def _freeze_stages(self):
+        if self.frozen_stages >= 0:
+            for m in [self.stem_conv1, self.stem_relu1, self.stem_norm1]:
+                m.eval()
+                for param in m.parameters():
+                    param.requires_grad = False
+
+            for m in [self.stem_conv2, self.stem_relu2, self.stem_norm2]:
+                m.eval()
+                for param in m.parameters():
+                    param.requires_grad = False
+
+            for m in [self.stem_conv3, self.stem_relu3, self.stem_norm3]:
+                m.eval()
+                for param in m.parameters():
+                    param.requires_grad = False
+
+        for stage, block in enumerate([self.blocks_a, self.blocks_b,
+                                       self.blocks_c, self.blocks_d]):
+            if stage < self.frozen_stages:
+                block.eval()
+                for param in block.parameters():
+                    param.requires_grad = False
+        for stage, patch_embed in enumerate([self.patch_embed_a, self.patch_embed_b,
+                                             self.patch_embed_c, self.patch_embed_d]):
+            if stage < self.frozen_stages:
+                patch_embed.eval()
+                for param in patch_embed.parameters():
+                    param.requires_grad = False
+
+        # for stage, relative_pos in enumerate([self.relative_pos_a, self.relative_pos_b,
+        #                                      self.relative_pos_c, self.relative_pos_d]):
+        #     if stage < self.frozen_stages:
+        #         relative_pos.requires_grad = False
 
     def update_temperature(self):
         for m in self.modules():
@@ -421,12 +477,23 @@ class CMT(BaseModule):
 
         return outs
 
+    def train(self, mode=True):
+        super(CMT, self).train(mode)
+        self._freeze_stages()
+        if mode and self.norm_eval:
+            for m in self.modules():
+                if isinstance(m, _BatchNorm):
+                    m.eval()
+
 
 if __name__ == '__main__':
     # B C H W
     input = torch.rand(20, 3, 224, 224)
+    model = CMT(frozen_stages=2)
 
-    model = MTNet()
+    pretrain = torch.load('../../../checkpoints/cmt_tiny_mm_wo_rp.pth', map_location=torch.device('cpu'))
+    # 载入与训练参数
+    model.load_state_dict(pretrain['state_dict'])
 
     output = model(input)
 

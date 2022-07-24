@@ -9,11 +9,11 @@ _base_ = [
 dataset_type = 'CocoDataset'
 
 # MatPool
-# data_root = '/mnt/dataset/voc2012/coco/'
+data_root = '/mnt/dataset/voc2012/coco/'
 # Windows
 # data_root = 'D:/MyCode/Dataset/voc2007/coco/'
 # Linux
-data_root = '/home/taowenyin/MyCode/Dataset/voc2012/coco/'
+# data_root = '/home/taowenyin/MyCode/Dataset/voc2012/coco/'
 
 classes = ('aeroplane', 'bicycle', 'bird', 'boat', 'bottle', 'bus', 'car',
            'cat', 'chair', 'cow', 'diningtable', 'dog', 'horse',
@@ -36,6 +36,8 @@ model = dict(
         qk_scale=None,
         representation_size=None,
         drop_rate=0.,
+        frozen_stages=1,
+        norm_eval=False,
         attn_drop_rate=0.,
         drop_path_rate=0.,
         hybrid_backbone=None,
@@ -46,7 +48,7 @@ model = dict(
         dp=0.1,
         init_cfg=dict(
             type='Pretrained',
-            checkpoint='../checkpoints/cmt_tiny_mm.pth'
+            checkpoint='./checkpoints/cmt_tiny_mm_wo_rp.pth'
         )
     ),
     neck=dict(

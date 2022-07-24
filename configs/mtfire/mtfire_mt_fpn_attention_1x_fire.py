@@ -11,9 +11,9 @@ dataset_type = 'CocoDataset'
 # Linux
 # data_root = '/home/taowenyin/MyCode/Dataset/fire_coco/'
 # MatPool
-data_root = '/mnt/dataset/fire_coco/'
+# data_root = '/mnt/dataset/fire_coco/'
 # Windows
-# data_root = 'D:/MyCode/Dataset/voc2007/coco/'
+data_root = 'D:/MyCode/Dataset/voc2007/coco/'
 # MAC
 # data_root = '/Users/taowenyin/Database/voc2012/coco/'
 
@@ -23,7 +23,7 @@ classes = ('fire',)
 model = dict(
     type='MTFire',
     backbone=dict(
-        type='MTNet',
+        type='CMT',
         img_size=512,
         in_chans=3,
         num_classes=1,
@@ -36,6 +36,8 @@ model = dict(
         qk_scale=None,
         representation_size=None,
         drop_rate=0.,
+        frozen_stages=4,
+        norm_eval=True,
         attn_drop_rate=0.,
         drop_path_rate=0.,
         hybrid_backbone=None,
@@ -46,7 +48,7 @@ model = dict(
         dp=0.1,
         init_cfg=dict(
             type='Pretrained',
-            checkpoint='./checkpoints/cmt_tiny.pth'
+            checkpoint='./checkpoints/cmt_tiny_mm_wo_rp.pth'
         )
     ),
     neck=dict(
@@ -134,8 +136,8 @@ test_pipeline = [
 ]
 
 data = dict(
-    samples_per_gpu=4, # Batch Size
-    workers_per_gpu=4,
+    samples_per_gpu=8, # Batch Size
+    workers_per_gpu=8,
     train=dict(
         type=dataset_type,
         ann_file=data_root + 'annotations/instances_train2017.json',
