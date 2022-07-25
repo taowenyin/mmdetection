@@ -24,8 +24,8 @@ model = dict(
         type='MobileNetV2',
         out_indices=(2, 3, 4, 6),
         act_cfg=dict(type='LeakyReLU', negative_slope=0.1),
-        # [16(1), 24(1/2), 32(1/4), 64(1/8), 96(1/8), 160(1/16), 320(1/16), 1280(1/16)]
-        frozen_stages=7,
+        # [16(2), 24(4), 32(8), 64(16), 96(16), 160(32), 320(32), 1280(32)]
+        frozen_stages=6,
         norm_eval=False,
         init_cfg=dict(
             type='Pretrained',
