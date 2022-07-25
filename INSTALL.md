@@ -13,6 +13,7 @@ FCOS训练指令
 ```bash
 python tools/train.py ./configs/mtfire/fcos_r50_caffe_fpn_gn-head_1x_coco.py
 python tools/train.py ./configs/voc_test/fcos_r50_caffe_fpn_gn-head_1x_coco.py
+python tools/train.py ./configs/voc_test/mobilenet_fcos_r50_caffe_fpn_gn-head_1x_coco.py
 ```
 
 Faster-RCNN训练指令
