@@ -22,29 +22,28 @@ model = dict(
     type='FCOS',
     backbone=dict(
         type='MobileNetV2',
-        out_indices=(2, 3, 4, 6),
+        out_indices=(2, 3, 4, 6, 7),
         act_cfg=dict(type='LeakyReLU', negative_slope=0.1),
         # [16(2), 24(4), 32(8), 64(16), 96(16), 160(32), 320(32), 1280(32)]
-        frozen_stages=6,
+        frozen_stages=5,
         norm_eval=False,
         init_cfg=dict(
             type='Pretrained',
             checkpoint='open-mmlab://mmdet/mobilenet_v2')),
     neck=dict(
         type='FPN',
-        in_channels=[32, 64, 96, 320],
-        out_channels=96,
+        in_channels=[32, 64, 96, 320, 1280],
+        out_channels=320,
         start_level=0,
-        add_extra_convs='on_output',
         num_outs=5,
         relu_before_extra_convs=True),
     bbox_head=dict(
         type='FCOSHead',
         num_classes=20,
-        in_channels=96,
+        in_channels=320,
         stacked_convs=4,
-        feat_channels=96,
-        strides=[8, 16, 32, 64, 128],
+        feat_channels=320,
+        strides=[8, 16, 16, 32, 32],
         loss_cls=dict(
             type='FocalLoss',
             use_sigmoid=True,
@@ -71,6 +70,10 @@ model = dict(
         score_thr=0.05,
         nms=dict(type='nms', iou_threshold=0.5),
         max_per_img=100))
+# # pytorch
+# mean=[123.675, 116.28, 103.53], std=[58.395, 57.12, 57.375], to_rgb=True
+# # caffe
+# mean=[103.530, 116.280, 123.675], std=[1.0, 1.0, 1.0], to_rgb=False
 img_norm_cfg = dict(
     mean=[102.9801, 115.9465, 122.7717], std=[1.0, 1.0, 1.0], to_rgb=False)
 train_pipeline = [
@@ -99,7 +102,7 @@ test_pipeline = [
         ])
 ]
 data = dict(
-    samples_per_gpu=16,
+    samples_per_gpu=12,
     workers_per_gpu=6,
     train=dict(
         type=dataset_type,
