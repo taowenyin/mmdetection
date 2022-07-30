@@ -134,3 +134,10 @@ python tools/train.py ./configs/mtfire/mtfire_mt_fpn_attention_1x_fire.py
 python tools/train.py ./configs/voc_test/mtfire_mt_fpn_attention_1x_fire.py
 ```
 
+# 模型间比较
+
+## AP
+
+```bash
+python tools/analysis_tools/analyze_logs.py plot_curve ./fire_detection/fasterrcnn/20220719_104625.log.json ./fire_detection/retinanet/20220729_154416.log.json ./fire_detection/fcos/20220719_034237.log.json ./fire_detection/autoassign/20220729_150647.log.json ./fire_detection/atss/20220729_144919.log.json --legend Faster-RCNN RetinaNet FCOS AutoAssign ATSS --keys bbox_mAP
+```
