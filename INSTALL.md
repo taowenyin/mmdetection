@@ -10,20 +10,50 @@ pip install timm
 
 # Anchor-Base方法
 
-## Faster-RCNN训练指令
+## Faster-RCNN
+
+### 训练指令
 
 ```bash
 python tools/train.py ./configs/mtfire/faster_rcnn_r50_fpn_1x_coco.py
 python tools/train.py ./configs/voc_test/faster_rcnn_r50_fpn_1x_coco.py
 ```
 
-## RetinNet训练指令
+### 模型复杂度指令
+
+```bash
+python tools/analysis_tools/get_flops.py ./configs/mtfire/faster_rcnn_r50_fpn_1x_coco.py --shape 800 1280
+```
+
+### 模型FPS指令
+
+```bash
+python -m torch.distributed.launch --nproc_per_node=1 --master_port=29500 tools/analysis_tools/benchmark.py ./configs/mtfire/faster_rcnn_r50_fpn_1x_coco.py ./checkpoints/faster_rcnn_r50_fpn_1x_coco_20200130-047c8118.pth --launcher pytorch
+```
+
+## RetinNet
+
+### 训练指令
 
 ```bash
 python tools/train.py ./configs/mtfire/retinanet_r50_fpn_1x_coco.py
 ```
 
-## YoloV3训练指令
+### 模型复杂度指令
+
+```bash
+python tools/analysis_tools/get_flops.py ./configs/mtfire/retinanet_r50_fpn_1x_coco.py --shape 800 1280
+```
+
+### 模型FPS指令
+
+```bash
+python -m torch.distributed.launch --nproc_per_node=1 --master_port=29500 tools/analysis_tools/benchmark.py ./configs/mtfire/retinanet_r50_fpn_1x_coco.py ./checkpoints/retinanet_r50_fpn_1x_coco_20200130-c2398f9e.pth --launcher pytorch
+```
+
+## YoloV3
+
+### 训练指令
 
 ```bash
 python tools/train.py ./configs/mtfire/yolov3_mobilenetv2_320_300e_coco.py
@@ -31,7 +61,9 @@ python tools/train.py ./configs/mtfire/yolov3_mobilenetv2_320_300e_coco.py
 
 # Anchor-Free方法
 
-## FCOS训练指令
+## FCOS
+
+### 训练指令
 
 ```bash
 python tools/train.py ./configs/mtfire/fcos_r50_caffe_fpn_gn-head_1x_coco.py
@@ -39,21 +71,63 @@ python tools/train.py ./configs/voc_test/fcos_r50_caffe_fpn_gn-head_1x_coco.py
 python tools/train.py ./configs/voc_test/mobilenet_fcos_r50_caffe_fpn_gn-head_1x_coco.py
 ```
 
-## ATSS训练指令
+### 模型复杂度指令
+
+```bash
+python tools/analysis_tools/get_flops.py ./configs/mtfire/fcos_r50_caffe_fpn_gn-head_1x_coco.py --shape 800 1280
+```
+
+### 模型FPS指令
+
+```bash
+python -m torch.distributed.launch --nproc_per_node=1 --master_port=29500 tools/analysis_tools/benchmark.py ./configs/mtfire/fcos_r50_caffe_fpn_gn-head_1x_coco.py ./checkpoints/fcos_r50_caffe_fpn_gn-head_1x_coco-821213aa.pth --launcher pytorch
+```
+
+## ATSS
+
+### 训练指令
 
 ```bash
 python tools/train.py ./configs/mtfire/atss_r50_fpn_1x_coco.py
 ```
 
-## AutoAssign训练指令
+### 模型复杂度指令
+
+```bash
+python tools/analysis_tools/get_flops.py ./configs/mtfire/atss_r50_fpn_1x_coco.py --shape 800 1280
+```
+
+### 模型FPS指令
+
+```bash
+python -m torch.distributed.launch --nproc_per_node=1 --master_port=29500 tools/analysis_tools/benchmark.py ./configs/mtfire/atss_r50_fpn_1x_coco.py ./checkpoints/atss_r50_fpn_1x_coco_20200209-985f7bd0.pth --launcher pytorch
+```
+
+## AutoAssign
+
+### 训练指令
 
 ```bash
 python tools/train.py ./configs/mtfire/autoassign_r50_fpn_8x2_1x_coco.py
 ```
 
-# 自定义方法
+### 模型复杂度指令
 
-MTFire训练指令
+```bash
+python tools/analysis_tools/get_flops.py ./configs/mtfire/autoassign_r50_fpn_8x2_1x_coco.py --shape 800 1280
+```
+
+### 模型FPS指令
+
+```bash
+python -m torch.distributed.launch --nproc_per_node=1 --master_port=29500 tools/analysis_tools/benchmark.py ./configs/mtfire/autoassign_r50_fpn_8x2_1x_coco.py ./checkpoints/auto_assign_r50_fpn_1x_coco_20210413_115540-5e17991f.pth --launcher pytorch
+```
+
+# 自定义模型
+
+## MTFire
+
+### 训练指令
 
 ```bash
 python tools/train.py ./configs/mtfire/mtfire_mt_fpn_attention_1x_fire.py
