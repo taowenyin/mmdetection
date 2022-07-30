@@ -93,4 +93,6 @@ load_from = './checkpoints/yolov3_mobilenetv2_320_300e_coco_20210719_215349-d18d
 
 checkpoint_config = dict(create_symlink=False)
 
+runner = dict(type='EpochBasedRunner', max_epochs=12)
+
 work_dir = './fire_detection/yolov3'

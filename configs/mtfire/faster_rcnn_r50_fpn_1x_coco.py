@@ -40,7 +40,7 @@ data = dict(
         classes=classes,
         img_prefix=data_root + 'val2017/'))
 
-runner = dict(type='EpochBasedRunner', max_epochs=20)
+runner = dict(type='EpochBasedRunner', max_epochs=12)
 
 load_from = './checkpoints/faster_rcnn_r50_fpn_1x_coco_20200130-047c8118.pth'
 
