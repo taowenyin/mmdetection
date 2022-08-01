@@ -59,6 +59,18 @@ python -m torch.distributed.launch --nproc_per_node=1 --master_port=29500 tools/
 python tools/train.py ./configs/mtfire/yolov3_mobilenetv2_320_300e_coco.py
 ```
 
+### 模型复杂度指令
+
+```bash
+python tools/analysis_tools/get_flops.py ./configs/mtfire/yolov3_mobilenetv2_320_300e_coco.py --shape 800 1280
+```
+
+### 模型FPS指令
+
+```bash
+python -m torch.distributed.launch --nproc_per_node=1 --master_port=29500 tools/analysis_tools/benchmark.py ./configs/mtfire/yolov3_mobilenetv2_320_300e_coco.py ./checkpoints/yolov3_mobilenetv2_320_300e_coco_20210719_215349-d18dff72.pth --launcher pytorch
+```
+
 # Anchor-Free方法
 
 ## FCOS
@@ -139,5 +151,5 @@ python tools/train.py ./configs/voc_test/mtfire_mt_fpn_attention_1x_fire.py
 ## AP
 
 ```bash
-python tools/analysis_tools/analyze_logs.py plot_curve ./fire_detection/fasterrcnn/20220719_104625.log.json ./fire_detection/retinanet/20220729_154416.log.json ./fire_detection/fcos/20220719_034237.log.json ./fire_detection/autoassign/20220729_150647.log.json ./fire_detection/atss/20220729_144919.log.json --legend Faster-RCNN RetinaNet FCOS AutoAssign ATSS --keys bbox_mAP
+python tools/analysis_tools/analyze_logs.py plot_curve ./fire_detection/fasterrcnn/20220730_132346.log.json ./fire_detection/retinanet/20220729_154416.log.json ./fire_detection/fcos/20220719_034237.log.json ./fire_detection/autoassign/20220729_150647.log.json ./fire_detection/atss/20220729_144919.log.json ./fire_detection/yolov3/20220730_132105.log.json --legend Faster-RCNN RetinaNet FCOS AutoAssign ATSS YOLOv3 --keys bbox_mAP
 ```
