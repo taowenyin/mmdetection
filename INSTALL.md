@@ -135,6 +135,28 @@ python tools/analysis_tools/get_flops.py ./configs/mtfire/autoassign_r50_fpn_8x2
 python -m torch.distributed.launch --nproc_per_node=1 --master_port=29500 tools/analysis_tools/benchmark.py ./configs/mtfire/autoassign_r50_fpn_8x2_1x_coco.py ./checkpoints/auto_assign_r50_fpn_1x_coco_20210413_115540-5e17991f.pth --launcher pytorch
 ```
 
+# Transform
+
+## DeformableDetr
+
+### 训练指令
+
+```bash
+python tools/train.py ./configs/mtfire/deformable_detr_r50_16x2_50e_coco.py
+```
+
+### 模型复杂度指令
+
+```bash
+python tools/analysis_tools/get_flops.py ./configs/mtfire/deformable_detr_r50_16x2_50e_coco.py --shape 800 1280
+```
+
+### 模型FPS指令
+
+```bash
+python -m torch.distributed.launch --nproc_per_node=1 --master_port=29500 tools/analysis_tools/benchmark.py ./configs/mtfire/deformable_detr_r50_16x2_50e_coco.py ./checkpoints/deformable_detr_r50_16x2_50e_coco_20210419_220030-a12b9512.pth --launcher pytorch
+```
+
 # 自定义模型
 
 ## MTFire
