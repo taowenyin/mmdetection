@@ -11,9 +11,9 @@ dataset_type = 'CocoDataset'
 # Linux
 # data_root = '/home/taowenyin/MyCode/Dataset/fire_coco/'
 # MatPool
-# data_root = '/mnt/dataset/fire_coco/'
+data_root = '/mnt/dataset/fire_coco/'
 # Windows
-data_root = 'D:/MyCode/Dataset/voc2007/coco/'
+# data_root = 'D:/MyCode/Dataset/voc2007/coco/'
 # MAC
 # data_root = '/Users/taowenyin/Database/voc2012/coco/'
 
@@ -27,7 +27,7 @@ model = dict(
         depth='base',
         init_cfg=dict(
             type='Pretrained',
-            checkpoint='./checkpoints/cmt_base.pth',
+            checkpoint='./checkpoints/m_cmt_base.pth',
         )
     ),
     neck=dict(

@@ -11,11 +11,13 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
+from mmcv.runner import BaseModule
 from timm.data import IMAGENET_DEFAULT_MEAN, IMAGENET_DEFAULT_STD
 from timm.models.helpers import load_pretrained
 from timm.models.layers import DropPath, to_2tuple, trunc_normal_
 from timm.models.resnet import resnet26d, resnet50d
 from timm.models.registry import register_model
+from ..builder import BACKBONES
 
 _logger = logging.getLogger(__name__)
 
@@ -192,7 +194,8 @@ class PatchEmbed(nn.Module):
         return x, (H, W)
 
 
-class CMT(nn.Module):
+@BACKBONES.register_module()
+class CMT(BaseModule):
     def __init__(self,
                  depth='tiny',
                  img_size=224,
@@ -209,8 +212,9 @@ class CMT(nn.Module):
                  norm_layer=None,
                  depths=[2, 2, 10, 2],
                  qk_ratio=1,
-                 sr_ratios=[8, 4, 2, 1]):
-        super().__init__()
+                 sr_ratios=[8, 4, 2, 1],
+                 init_cfg=None):
+        super(CMT, self).__init__(init_cfg)
 
         if 'base' == depth:
             img_size = 256
