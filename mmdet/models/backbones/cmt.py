@@ -204,6 +204,7 @@ class CMT(BaseModule):
                  stem_channel=16,
                  num_heads=[1, 2, 4, 8],
                  mlp_ratios=[3.6, 3.6, 3.6, 3.6],
+                 out_indices=[0, 1, 2, 3],
                  qkv_bias=True,
                  qk_scale=None,
                  drop_rate=0.,
@@ -257,6 +258,8 @@ class CMT(BaseModule):
             qkv_bias=True
 
         norm_layer = norm_layer or partial(nn.LayerNorm, eps=1e-6)
+
+        self.out_indices = out_indices
 
         self.stem_conv1 = nn.Conv2d(3, stem_channel, kernel_size=3, stride=2, padding=1, bias=True)
         self.stem_relu1 = nn.GELU()
@@ -363,26 +366,38 @@ class CMT(BaseModule):
         x = self.stem_relu3(x)
         x = self.stem_norm3(x)
 
+        # 模型的金字塔输出
+        outs = []
+
         x, (H, W) = self.patch_embed_a(x)
         for i, blk in enumerate(self.blocks_a):
             x = blk(x, H, W, self.relative_pos_a)
-
         x = x.reshape(B, H, W, -1).permute(0, 3, 1, 2).contiguous()
+        if 0 in self.out_indices:
+            outs.append(x)
+
         x, (H, W) = self.patch_embed_b(x)
         for i, blk in enumerate(self.blocks_b):
             x = blk(x, H, W, self.relative_pos_b)
-
         x = x.reshape(B, H, W, -1).permute(0, 3, 1, 2).contiguous()
+        if 1 in self.out_indices:
+            outs.append(x)
+
         x, (H, W) = self.patch_embed_c(x)
         for i, blk in enumerate(self.blocks_c):
             x = blk(x, H, W, self.relative_pos_c)
-
         x = x.reshape(B, H, W, -1).permute(0, 3, 1, 2).contiguous()
+        if 2 in self.out_indices:
+            outs.append(x)
+
         x, (H, W) = self.patch_embed_d(x)
         for i, blk in enumerate(self.blocks_d):
             x = blk(x, H, W, self.relative_pos_d)
+        x = x.reshape(B, H, W, -1).permute(0, 3, 1, 2).contiguous()
+        if 3 in self.out_indices:
+            outs.append(x)
 
-        return x
+        return tuple(outs)
 
     def forward(self, x):
         x = self.forward_features(x)
