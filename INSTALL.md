@@ -168,6 +168,18 @@ python tools/train.py ./configs/mtfire/mtfire_mt_fpn_attention_1x_fire.py
 python tools/train.py ./configs/voc_test/mtfire_mt_fpn_attention_1x_fire.py
 ```
 
+### 模型复杂度指令
+
+```bash
+python tools/analysis_tools/get_flops.py ./configs/mtfire/mtfire_mt_fpn_attention_1x_fire.py --shape 800 1280
+```
+
+### 模型FPS指令
+
+```bash
+python -m torch.distributed.launch --nproc_per_node=1 --master_port=29500 tools/analysis_tools/benchmark.py ./configs/mtfire/mtfire_mt_fpn_attention_1x_fire.py ./fire_detection/mtfire/epoch_12.pth --launcher pytorch
+```
+
 # 模型间比较
 
 ## AP
