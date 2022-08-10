@@ -9,7 +9,7 @@ _base_ = [
 dataset_type = 'CocoDataset'
 
 # MatPool
-data_root = '/mnt/dataset/voc2012/coco/'
+data_root = '/mnt/dataset/VOC/coco/'
 # Windows
 # data_root = 'D:/MyCode/Dataset/voc2007/coco/'
 # Linux
@@ -24,49 +24,29 @@ model = dict(
     type='MTFire',
     backbone=dict(
         type='CMT',
-        img_size=512,
-        in_chans=3,
-        num_classes=20,
-        embed_dims=[46, 92, 184, 368],
-        stem_channel=16,
-        fc_dim=1280,
-        num_heads=[1, 2, 4, 8],
-        mlp_ratios=[3.6, 3.6, 3.6, 3.6],
-        qkv_bias=True,
-        qk_scale=None,
-        representation_size=None,
-        drop_rate=0.,
-        frozen_stages=4,
-        norm_eval=False,
-        attn_drop_rate=0.,
-        drop_path_rate=0.,
-        hybrid_backbone=None,
-        norm_layer=None,
-        depths=[2, 2, 10, 2],
-        qk_ratio=1,
-        sr_ratios=[8, 4, 2, 1],
-        dp=0.1,
+        depth='base',
+        out_indices=[0, 1, 2, 3],
         init_cfg=dict(
             type='Pretrained',
-            checkpoint='../checkpoints/cmt_tiny_mm_wo_rp.pth'
+            checkpoint='./checkpoints/m_cmt_base.pth',
         )
     ),
     neck=dict(
         type='FPN',
-        in_channels=[46, 92, 184, 368],
-        out_channels=46,
+        in_channels=[76, 152, 304, 608],
+        out_channels=76,
         start_level=0,
-        num_outs=5,
-        add_extra_convs='on_output',
+        num_outs=4,
         relu_before_extra_convs=True,
     ),
     bbox_head=dict(
         type='FCOSHead',
         num_classes=20,
-        in_channels=46,
+        in_channels=76,
+        regress_ranges=((-1, 64), (64, 128), (128, 256), (256, 1e8)),
         stacked_convs=4,
         feat_channels=256,
-        strides=[8, 16, 32, 64, 128],
+        strides=[4, 8, 16, 32],
         loss_cls=dict(
             type='FocalLoss',
             use_sigmoid=True,
@@ -103,15 +83,15 @@ model = dict(
     )
 )
 
-# img_norm_cfg = dict(
-#     mean=[123.675, 116.28, 103.53], std=[58.395, 57.12, 57.375], to_rgb=True)
 img_norm_cfg = dict(
-    mean=[102.9801, 115.9465, 122.7717], std=[1.0, 1.0, 1.0], to_rgb=False)
+    mean=[123.675, 116.28, 103.53], std=[58.395, 57.12, 57.375], to_rgb=True)
+# img_norm_cfg = dict(
+#     mean=[102.9801, 115.9465, 122.7717], std=[1.0, 1.0, 1.0], to_rgb=False)
 
 train_pipeline = [
     dict(type='LoadImageFromFile'),
     dict(type='LoadAnnotations', with_bbox=True),
-    dict(type='Resize', img_scale=(512, 512), keep_ratio=False),
+    dict(type='Resize', img_scale=(256, 256), keep_ratio=False),
     dict(type='RandomFlip', flip_ratio=0.5),
     dict(type='Normalize', **img_norm_cfg),
     dict(type='Pad', size_divisor=32),
@@ -123,10 +103,10 @@ test_pipeline = [
     dict(type='LoadImageFromFile'),
     dict(
         type='MultiScaleFlipAug',
-        img_scale=(512, 512),
+        img_scale=(256, 256),
         flip=False,
         transforms=[
-            dict(type='Resize', img_scale=(512, 512), keep_ratio=False),
+            dict(type='Resize', img_scale=(256, 256), keep_ratio=False),
             dict(type='RandomFlip'),
             dict(type='Normalize', **img_norm_cfg),
             dict(type='Pad', size_divisor=32),
@@ -137,7 +117,7 @@ test_pipeline = [
 
 data = dict(
     samples_per_gpu=8, # Batch Size
-    workers_per_gpu=1,
+    workers_per_gpu=6,
     train=dict(
         type=dataset_type,
         ann_file=data_root + 'annotations/instances_train2017.json',
@@ -157,18 +137,6 @@ data = dict(
         img_prefix=data_root + 'val2017/',
         pipeline=test_pipeline)
 )
-# # optimizer
-# optimizer = dict(
-#     lr=0.01, paramwise_cfg=dict(bias_lr_mult=2., bias_decay_mult=0.))
-# optimizer_config = dict(
-#     _delete_=True, grad_clip=dict(max_norm=35, norm_type=2))
-# # learning policy
-# lr_config = dict(
-#     policy='step',
-#     warmup='constant',
-#     warmup_iters=500,
-#     warmup_ratio=1.0 / 3,
-#     step=[8, 11])
 
 runner = dict(type='EpochBasedRunner', max_epochs=12)
 
