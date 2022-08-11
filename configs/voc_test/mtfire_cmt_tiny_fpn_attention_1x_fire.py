@@ -11,7 +11,7 @@ dataset_type = 'CocoDataset'
 # MatPool
 data_root = '/mnt/dataset/VOC/coco/'
 # Windows
-# data_root = 'D:/MyCode/Dataset/voc2007/coco/'
+# data_root = 'D:/MyCode/Dataset/VOC/coco/'
 # Linux
 # data_root = '/home/taowenyin/MyCode/Dataset/voc2012/coco/'
 
@@ -24,17 +24,17 @@ model = dict(
     type='MTFire',
     backbone=dict(
         type='CMT',
-        depth='base',
+        depth='tiny',
         out_indices=[0, 1, 2, 3],
         init_cfg=dict(
             type='Pretrained',
-            checkpoint='./checkpoints/m_cmt_base.pth',
+            checkpoint='./checkpoints/m_cmt_tiny.pth',
         )
     ),
     neck=dict(
         type='FPN',
-        in_channels=[76, 152, 304, 608],
-        out_channels=76,
+        in_channels=[46, 92, 184, 368],
+        out_channels=46,
         start_level=0,
         num_outs=4,
         relu_before_extra_convs=True,
@@ -42,7 +42,7 @@ model = dict(
     bbox_head=dict(
         type='FCOSHead',
         num_classes=20,
-        in_channels=76,
+        in_channels=46,
         regress_ranges=((-1, 64), (64, 128), (128, 256), (256, 1e8)),
         stacked_convs=4,
         feat_channels=256,
@@ -91,7 +91,7 @@ img_norm_cfg = dict(
 train_pipeline = [
     dict(type='LoadImageFromFile'),
     dict(type='LoadAnnotations', with_bbox=True),
-    dict(type='Resize', img_scale=(256, 256), keep_ratio=False),
+    dict(type='Resize', img_scale=(160, 160), keep_ratio=False),
     dict(type='RandomFlip', flip_ratio=0.5),
     dict(type='Normalize', **img_norm_cfg),
     dict(type='Pad', size_divisor=32),
@@ -103,10 +103,10 @@ test_pipeline = [
     dict(type='LoadImageFromFile'),
     dict(
         type='MultiScaleFlipAug',
-        img_scale=(256, 256),
+        img_scale=(160, 160),
         flip=False,
         transforms=[
-            dict(type='Resize', img_scale=(256, 256), keep_ratio=False),
+            dict(type='Resize', img_scale=(160, 160), keep_ratio=False),
             dict(type='RandomFlip'),
             dict(type='Normalize', **img_norm_cfg),
             dict(type='Pad', size_divisor=32),
@@ -142,4 +142,4 @@ runner = dict(type='EpochBasedRunner', max_epochs=12)
 
 checkpoint_config = dict(create_symlink=False)
 
-work_dir = './voc_test/mtfire'
+work_dir = './voc_test/mtfire/tiny'

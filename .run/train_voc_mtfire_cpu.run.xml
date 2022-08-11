@@ -14,7 +14,7 @@
     <option name="ADD_SOURCE_ROOTS" value="true" />
     <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
     <option name="SCRIPT_NAME" value="$PROJECT_DIR$/tools/train.py" />
-    <option name="PARAMETERS" value="../configs/voc_test/mtfire_mt_fpn_attention_1x_fire.py --work-dir=../voc_test/mtfire" />
+    <option name="PARAMETERS" value="../configs/voc_test/mtfire_cmt_tiny_fpn_attention_1x_fire.py --work-dir=../voc_test/mtfire" />
     <option name="SHOW_COMMAND_LINE" value="false" />
     <option name="EMULATE_TERMINAL" value="false" />
     <option name="MODULE_MODE" value="false" />

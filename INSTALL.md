@@ -163,21 +163,41 @@ python -m torch.distributed.launch --nproc_per_node=1 --master_port=29500 tools/
 
 ### 训练指令
 
+#### Fire
+
 ```bash
-python tools/train.py ./configs/mtfire/mtfire_mt_fpn_attention_1x_fire.py
-python tools/train.py ./configs/voc_test/mtfire_mt_fpn_attention_1x_fire.py
+python tools/train.py ./configs/mtfire/mtfire_cmt_base_fpn_attention_1x_fire.py
+```
+
+#### VOC
+
+```bash
+python tools/train.py ./configs/voc_test/mtfire_cmt_base_fpn_attention_1x_fire.py
+python tools/train.py ./configs/voc_test/mtfire_cmt_small_fpn_attention_1x_fire.py
+python tools/train.py ./configs/voc_test/mtfire_cmt_xs_fpn_attention_1x_fire.py
+python tools/train.py ./configs/voc_test/mtfire_cmt_tiny_fpn_attention_1x_fire.py
 ```
 
 ### 模型复杂度指令
 
+#### VOC
+
 ```bash
-python tools/analysis_tools/get_flops.py ./configs/mtfire/mtfire_mt_fpn_attention_1x_fire.py --shape 800 1280
+python tools/analysis_tools/get_flops.py ./configs/voc_test/mtfire_cmt_base_fpn_attention_1x_fire.py --shape 256 256
+python tools/analysis_tools/get_flops.py ./configs/voc_test/mtfire_cmt_small_fpn_attention_1x_fire.py --shape 224 224
+python tools/analysis_tools/get_flops.py ./configs/voc_test/mtfire_cmt_xs_fpn_attention_1x_fire.py --shape 192 192
+python tools/analysis_tools/get_flops.py ./configs/voc_test/mtfire_cmt_tiny_fpn_attention_1x_fire.py --shape 160 160
 ```
 
 ### 模型FPS指令
 
+#### VOC
+
 ```bash
-python -m torch.distributed.launch --nproc_per_node=1 --master_port=29500 tools/analysis_tools/benchmark.py ./configs/mtfire/mtfire_mt_fpn_attention_1x_fire.py ./fire_detection/mtfire/epoch_12.pth --launcher pytorch
+python -m torch.distributed.launch --nproc_per_node=1 --master_port=29500 tools/analysis_tools/benchmark.py ./configs/voc_test/mtfire_cmt_base_fpn_attention_1x_fire.py ./voc_test/mtfire/base/epoch_12.pth --launcher pytorch
+python -m torch.distributed.launch --nproc_per_node=1 --master_port=29500 tools/analysis_tools/benchmark.py ./configs/voc_test/mtfire_cmt_small_fpn_attention_1x_fire.py ./voc_test/mtfire/small/epoch_12.pth --launcher pytorch
+python -m torch.distributed.launch --nproc_per_node=1 --master_port=29500 tools/analysis_tools/benchmark.py ./configs/voc_test/mtfire_cmt_xs_fpn_attention_1x_fire.py ./voc_test/mtfire/xs/epoch_12.pth --launcher pytorch
+python -m torch.distributed.launch --nproc_per_node=1 --master_port=29500 tools/analysis_tools/benchmark.py ./configs/voc_test/mtfire_cmt_tiny_fpn_attention_1x_fire.py ./voc_test/mtfire/tiny/epoch_12.pth --launcher pytorch
 ```
 
 # 模型间比较
