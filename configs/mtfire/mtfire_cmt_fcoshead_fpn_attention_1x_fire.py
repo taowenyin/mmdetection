@@ -142,4 +142,4 @@ runner = dict(type='EpochBasedRunner', max_epochs=12)
 
 checkpoint_config = dict(create_symlink=False)
 
-work_dir = './fire_detection/mtfire'
+work_dir = './fire_detection/mtfire/fcos'
