@@ -61,7 +61,7 @@ img_norm_cfg = dict(
 train_pipeline = [
     dict(type='LoadImageFromFile'),
     dict(type='LoadAnnotations', with_bbox=True),
-    dict(type='Resize', img_scale=(1333, 800), keep_ratio=True),
+    dict(type='Resize', img_scale=(256, 256), keep_ratio=False),
     dict(type='RandomFlip', flip_ratio=0.5),
     dict(type='Normalize', **img_norm_cfg),
     dict(type='Pad', size_divisor=32),
@@ -72,10 +72,10 @@ test_pipeline = [
     dict(type='LoadImageFromFile'),
     dict(
         type='MultiScaleFlipAug',
-        img_scale=(1333, 800),
+        img_scale=(256, 256),
         flip=False,
         transforms=[
-            dict(type='Resize', keep_ratio=True),
+            dict(type='Resize', img_scale=(256, 256), keep_ratio=False),
             dict(type='RandomFlip'),
             dict(type='Normalize', **img_norm_cfg),
             dict(type='Pad', size_divisor=32),
@@ -84,8 +84,8 @@ test_pipeline = [
         ])
 ]
 data = dict(
-    samples_per_gpu=4,
-    workers_per_gpu=4,
+    samples_per_gpu=64,
+    workers_per_gpu=6,
     train=dict(
         type=dataset_type,
         ann_file=data_root + 'annotations/instances_train2017.json',
@@ -116,7 +116,8 @@ lr_config = dict(
     warmup_iters=1000,
     warmup_ratio=1.0 / 1000,
     step=[8, 11])
-total_epochs = 12
+
+runner = dict(type='EpochBasedRunner', max_epochs=12)
 
 load_from = './checkpoints/auto_assign_r50_fpn_1x_coco_20210413_115540-5e17991f.pth'
 

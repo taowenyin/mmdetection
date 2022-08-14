@@ -102,44 +102,8 @@ img_norm_cfg = dict(
 train_pipeline = [
     dict(type='LoadImageFromFile'),
     dict(type='LoadAnnotations', with_bbox=True),
+    dict(type='Resize', img_scale=(256, 256), keep_ratio=False),
     dict(type='RandomFlip', flip_ratio=0.5),
-    dict(
-        type='AutoAugment',
-        policies=[
-            [
-                dict(
-                    type='Resize',
-                    img_scale=[(480, 1333), (512, 1333), (544, 1333),
-                               (576, 1333), (608, 1333), (640, 1333),
-                               (672, 1333), (704, 1333), (736, 1333),
-                               (768, 1333), (800, 1333)],
-                    multiscale_mode='value',
-                    keep_ratio=True)
-            ],
-            [
-                dict(
-                    type='Resize',
-                    # The radio of all image in train dataset < 7
-                    # follow the original impl
-                    img_scale=[(400, 4200), (500, 4200), (600, 4200)],
-                    multiscale_mode='value',
-                    keep_ratio=True),
-                dict(
-                    type='RandomCrop',
-                    crop_type='absolute_range',
-                    crop_size=(384, 600),
-                    allow_negative_crop=True),
-                dict(
-                    type='Resize',
-                    img_scale=[(480, 1333), (512, 1333), (544, 1333),
-                               (576, 1333), (608, 1333), (640, 1333),
-                               (672, 1333), (704, 1333), (736, 1333),
-                               (768, 1333), (800, 1333)],
-                    multiscale_mode='value',
-                    override=True,
-                    keep_ratio=True)
-            ]
-        ]),
     dict(type='Normalize', **img_norm_cfg),
     dict(type='Pad', size_divisor=1),
     dict(type='DefaultFormatBundle'),
@@ -152,10 +116,10 @@ test_pipeline = [
     dict(type='LoadImageFromFile'),
     dict(
         type='MultiScaleFlipAug',
-        img_scale=(1333, 800),
+        img_scale=(256, 256),
         flip=False,
         transforms=[
-            dict(type='Resize', keep_ratio=True),
+            dict(type='Resize', img_scale=(256, 256), keep_ratio=False),
             dict(type='RandomFlip'),
             dict(type='Normalize', **img_norm_cfg),
             dict(type='Pad', size_divisor=1),
@@ -164,8 +128,8 @@ test_pipeline = [
         ])
 ]
 data = dict(
-    samples_per_gpu=1,
-    workers_per_gpu=2,
+    samples_per_gpu=24,
+    workers_per_gpu=6,
     train=dict(
         filter_empty_gt=False,
         type=dataset_type,
@@ -201,7 +165,7 @@ optimizer = dict(
 optimizer_config = dict(grad_clip=dict(max_norm=0.1, norm_type=2))
 # learning policy
 lr_config = dict(policy='step', step=[40])
-runner = dict(type='EpochBasedRunner', max_epochs=50)
+runner = dict(type='EpochBasedRunner', max_epochs=12)
 
 # NOTE: `auto_scale_lr` is for automatically scaling LR,
 # USER SHOULD NOT CHANGE ITS VALUES.

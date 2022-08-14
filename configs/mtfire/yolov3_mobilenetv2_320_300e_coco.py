@@ -38,7 +38,7 @@ train_pipeline = [
         type='MinIoURandomCrop',
         min_ious=(0.4, 0.5, 0.6, 0.7, 0.8, 0.9),
         min_crop_size=0.3),
-    dict(type='Resize', img_scale=(320, 320), keep_ratio=True),
+    dict(type='Resize', img_scale=(256, 256), keep_ratio=True),
     dict(type='RandomFlip', flip_ratio=0.5),
     dict(type='PhotoMetricDistortion'),
     dict(type='Normalize', **img_norm_cfg),
@@ -50,10 +50,10 @@ test_pipeline = [
     dict(type='LoadImageFromFile'),
     dict(
         type='MultiScaleFlipAug',
-        img_scale=(320, 320),
+        img_scale=(256, 256),
         flip=False,
         transforms=[
-            dict(type='Resize', keep_ratio=True),
+            dict(type='Resize', img_scale=(256, 256), keep_ratio=True),
             dict(type='RandomFlip'),
             dict(type='Normalize', **img_norm_cfg),
             dict(type='Pad', size_divisor=32),
@@ -62,7 +62,7 @@ test_pipeline = [
         ])
 ]
 data = dict(
-    samples_per_gpu=48,
+    samples_per_gpu=96,
     workers_per_gpu=6,
     train=dict(
         dataset=dict(

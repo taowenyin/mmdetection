@@ -21,9 +21,23 @@ model = dict(
     roi_head=dict(
         bbox_head=dict(num_classes=1)))
 
+train_pipeline = [
+    dict(type='Resize', img_scale=(256, 256), keep_ratio=False),
+]
+
+test_pipeline = [
+    dict(type='LoadImageFromFile'),
+    dict(
+        type='MultiScaleFlipAug',
+        img_scale=(256, 256),
+        transforms=[
+            dict(type='Resize', img_scale=(256, 256), keep_ratio=False),
+        ])
+]
+
 data = dict(
     samples_per_gpu=4,
-    workers_per_gpu=4,
+    workers_per_gpu=6,
     train=dict(
         type=dataset_type,
         ann_file=data_root + 'annotations/instances_train2017.json',

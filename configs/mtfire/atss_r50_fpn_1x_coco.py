@@ -75,9 +75,28 @@ model = dict(
 # optimizer
 optimizer = dict(type='SGD', lr=0.01, momentum=0.9, weight_decay=0.0001)
 
+img_norm_cfg = dict(
+    mean=[123.675, 116.28, 103.53], std=[58.395, 57.12, 57.375], to_rgb=True)
+# img_norm_cfg = dict(
+#     mean=[102.9801, 115.9465, 122.7717], std=[1.0, 1.0, 1.0], to_rgb=False)
+
+train_pipeline = [
+    dict(type='Resize', img_scale=(256, 256), keep_ratio=False),
+]
+
+test_pipeline = [
+    dict(type='LoadImageFromFile'),
+    dict(
+        type='MultiScaleFlipAug',
+        img_scale=(256, 256),
+        transforms=[
+            dict(type='Resize', img_scale=(256, 256), keep_ratio=False),
+        ])
+]
+
 data = dict(
     samples_per_gpu=4,
-    workers_per_gpu=4,
+    workers_per_gpu=6,
     train=dict(
         type=dataset_type,
         ann_file=data_root + 'annotations/instances_train2017.json',
@@ -98,5 +117,7 @@ data = dict(
 load_from = './checkpoints/atss_r50_fpn_1x_coco_20200209-985f7bd0.pth'
 
 checkpoint_config = dict(create_symlink=False)
+
+runner = dict(type='EpochBasedRunner', max_epochs=12)
 
 work_dir = './fire_detection/atss'
