@@ -186,6 +186,12 @@ python tools/train.py ./configs/voc_test/mtfire_cmt_tiny_fpn_attention_1x_fire.p
 
 ### 模型复杂度指令
 
+#### Fire
+
+```bash
+python tools/analysis_tools/get_flops.py ./configs/mtfire/mtfire_cmt_atss_fpn_attention_1x_fire.py --shape 256 256
+```
+
 #### VOC
 
 ```bash
@@ -196,6 +202,12 @@ python tools/analysis_tools/get_flops.py ./configs/voc_test/mtfire_cmt_tiny_fpn_
 ```
 
 ### 模型FPS指令
+
+#### Fire
+
+```bash
+python -m torch.distributed.launch --nproc_per_node=1 --master_port=29500 tools/analysis_tools/benchmark.py ./configs/mtfire/mtfire_cmt_atss_fpn_attention_1x_fire.py ./fire_detection/mtfire/atss/epoch_12.pth --launcher pytorch
+```
 
 #### VOC
 
