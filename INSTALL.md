@@ -22,13 +22,13 @@ python tools/train.py ./configs/voc_test/faster_rcnn_r50_fpn_1x_coco.py
 ### 模型复杂度指令
 
 ```bash
-python tools/analysis_tools/get_flops.py ./configs/mtfire/faster_rcnn_r50_fpn_1x_coco.py --shape 800 1280
+python tools/analysis_tools/get_flops.py ./configs/mtfire/faster_rcnn_r50_fpn_1x_coco.py --shape 256 256
 ```
 
 ### 模型FPS指令
 
 ```bash
-python -m torch.distributed.launch --nproc_per_node=1 --master_port=29500 tools/analysis_tools/benchmark.py ./configs/mtfire/faster_rcnn_r50_fpn_1x_coco.py ./checkpoints/faster_rcnn_r50_fpn_1x_coco_20200130-047c8118.pth --launcher pytorch
+python -m torch.distributed.launch --nproc_per_node=1 --master_port=29500 tools/analysis_tools/benchmark.py ./configs/mtfire/faster_rcnn_r50_fpn_1x_coco.py ./fire_detection/fasterrcnn/epoch_12.pth --launcher pytorch
 ```
 
 ## RetinNet
@@ -42,13 +42,13 @@ python tools/train.py ./configs/mtfire/retinanet_r50_fpn_1x_coco.py
 ### 模型复杂度指令
 
 ```bash
-python tools/analysis_tools/get_flops.py ./configs/mtfire/retinanet_r50_fpn_1x_coco.py --shape 800 1280
+python tools/analysis_tools/get_flops.py ./configs/mtfire/retinanet_r50_fpn_1x_coco.py --shape 256 256
 ```
 
 ### 模型FPS指令
 
 ```bash
-python -m torch.distributed.launch --nproc_per_node=1 --master_port=29500 tools/analysis_tools/benchmark.py ./configs/mtfire/retinanet_r50_fpn_1x_coco.py ./checkpoints/retinanet_r50_fpn_1x_coco_20200130-c2398f9e.pth --launcher pytorch
+python -m torch.distributed.launch --nproc_per_node=1 --master_port=29500 tools/analysis_tools/benchmark.py ./configs/mtfire/retinanet_r50_fpn_1x_coco.py ./fire_detection/retinanet/epoch_12.pth --launcher pytorch
 ```
 
 ## YoloV3
@@ -62,13 +62,13 @@ python tools/train.py ./configs/mtfire/yolov3_mobilenetv2_320_300e_coco.py
 ### 模型复杂度指令
 
 ```bash
-python tools/analysis_tools/get_flops.py ./configs/mtfire/yolov3_mobilenetv2_320_300e_coco.py --shape 800 1280
+python tools/analysis_tools/get_flops.py ./configs/mtfire/yolov3_mobilenetv2_320_300e_coco.py --shape 256 256
 ```
 
 ### 模型FPS指令
 
 ```bash
-python -m torch.distributed.launch --nproc_per_node=1 --master_port=29500 tools/analysis_tools/benchmark.py ./configs/mtfire/yolov3_mobilenetv2_320_300e_coco.py ./checkpoints/yolov3_mobilenetv2_320_300e_coco_20210719_215349-d18dff72.pth --launcher pytorch
+python -m torch.distributed.launch --nproc_per_node=1 --master_port=29500 tools/analysis_tools/benchmark.py ./configs/mtfire/yolov3_mobilenetv2_320_300e_coco.py ./fire_detection/yolov3/epoch_12.pth --launcher pytorch
 ```
 
 # Anchor-Free方法
@@ -86,13 +86,13 @@ python tools/train.py ./configs/voc_test/mobilenet_fcos_r50_caffe_fpn_gn-head_1x
 ### 模型复杂度指令
 
 ```bash
-python tools/analysis_tools/get_flops.py ./configs/mtfire/fcos_r50_caffe_fpn_gn-head_1x_coco.py --shape 800 1280
+python tools/analysis_tools/get_flops.py ./configs/mtfire/fcos_r50_caffe_fpn_gn-head_1x_coco.py --shape 256 256
 ```
 
 ### 模型FPS指令
 
 ```bash
-python -m torch.distributed.launch --nproc_per_node=1 --master_port=29500 tools/analysis_tools/benchmark.py ./configs/mtfire/fcos_r50_caffe_fpn_gn-head_1x_coco.py ./checkpoints/fcos_r50_caffe_fpn_gn-head_1x_coco-821213aa.pth --launcher pytorch
+python -m torch.distributed.launch --nproc_per_node=1 --master_port=29500 tools/analysis_tools/benchmark.py ./configs/mtfire/fcos_r50_caffe_fpn_gn-head_1x_coco.py ./fire_detection/fcos/epoch_12.pth --launcher pytorch
 ```
 
 ## ATSS
@@ -106,13 +106,13 @@ python tools/train.py ./configs/mtfire/atss_r50_fpn_1x_coco.py
 ### 模型复杂度指令
 
 ```bash
-python tools/analysis_tools/get_flops.py ./configs/mtfire/atss_r50_fpn_1x_coco.py --shape 800 1280
+python tools/analysis_tools/get_flops.py ./configs/mtfire/atss_r50_fpn_1x_coco.py --shape 256 256
 ```
 
 ### 模型FPS指令
 
 ```bash
-python -m torch.distributed.launch --nproc_per_node=1 --master_port=29500 tools/analysis_tools/benchmark.py ./configs/mtfire/atss_r50_fpn_1x_coco.py ./checkpoints/atss_r50_fpn_1x_coco_20200209-985f7bd0.pth --launcher pytorch
+python -m torch.distributed.launch --nproc_per_node=1 --master_port=29500 tools/analysis_tools/benchmark.py ./configs/mtfire/atss_r50_fpn_1x_coco.py ./fire_detection/atss/epoch_12.pth --launcher pytorch
 ```
 
 ## AutoAssign
@@ -132,7 +132,7 @@ python tools/analysis_tools/get_flops.py ./configs/mtfire/autoassign_r50_fpn_8x2
 ### 模型FPS指令
 
 ```bash
-python -m torch.distributed.launch --nproc_per_node=1 --master_port=29500 tools/analysis_tools/benchmark.py ./configs/mtfire/autoassign_r50_fpn_8x2_1x_coco.py ./checkpoints/auto_assign_r50_fpn_1x_coco_20210413_115540-5e17991f.pth --launcher pytorch
+python -m torch.distributed.launch --nproc_per_node=1 --master_port=29500 tools/analysis_tools/benchmark.py ./configs/mtfire/autoassign_r50_fpn_8x2_1x_coco.py ./fire_detection/autoassign/epoch_12.pth --launcher pytorch
 ```
 
 # Transform
@@ -148,13 +148,13 @@ python tools/train.py ./configs/mtfire/deformable_detr_r50_16x2_50e_coco.py
 ### 模型复杂度指令
 
 ```bash
-python tools/analysis_tools/get_flops.py ./configs/mtfire/deformable_detr_r50_16x2_50e_coco.py --shape 800 1280
+python tools/analysis_tools/get_flops.py ./configs/mtfire/deformable_detr_r50_16x2_50e_coco.py --shape 256 256
 ```
 
 ### 模型FPS指令
 
 ```bash
-python -m torch.distributed.launch --nproc_per_node=1 --master_port=29500 tools/analysis_tools/benchmark.py ./configs/mtfire/deformable_detr_r50_16x2_50e_coco.py ./checkpoints/deformable_detr_r50_16x2_50e_coco_20210419_220030-a12b9512.pth --launcher pytorch
+python -m torch.distributed.launch --nproc_per_node=1 --master_port=29500 tools/analysis_tools/benchmark.py ./configs/mtfire/deformable_detr_r50_16x2_50e_coco.py ./fire_detection/deformable/epoch_12.pth --launcher pytorch
 ```
 
 # 自定义模型
@@ -190,6 +190,7 @@ python tools/train.py ./configs/voc_test/mtfire_cmt_tiny_fpn_attention_1x_fire.p
 
 ```bash
 python tools/analysis_tools/get_flops.py ./configs/mtfire/mtfire_cmt_atss_fpn_attention_1x_fire.py --shape 256 256
+python tools/analysis_tools/get_flops.py ./configs/mtfire/mtfire_cmt_fcoshead_fpn_attention_1x_fire.py --shape 256 256
 ```
 
 #### VOC
@@ -207,6 +208,7 @@ python tools/analysis_tools/get_flops.py ./configs/voc_test/mtfire_cmt_tiny_fpn_
 
 ```bash
 python -m torch.distributed.launch --nproc_per_node=1 --master_port=29500 tools/analysis_tools/benchmark.py ./configs/mtfire/mtfire_cmt_atss_fpn_attention_1x_fire.py ./fire_detection/mtfire/atss/epoch_12.pth --launcher pytorch
+python -m torch.distributed.launch --nproc_per_node=1 --master_port=29500 tools/analysis_tools/benchmark.py ./configs/mtfire/mtfire_cmt_fcoshead_fpn_attention_1x_fire.py ./fire_detection/mtfire/fcos/epoch_12.pth --launcher pytorch
 ```
 
 #### VOC
