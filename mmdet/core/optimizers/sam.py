@@ -1,8 +1,18 @@
+from mmcv.runner import OPTIMIZERS
+from torch.optim import Optimizer
+from torch.optim import SGD
+
 import torch
 
 
-class SAM(torch.optim.Optimizer):
-    def __init__(self, params, base_optimizer, rho=0.05, adaptive=False, **kwargs):
+'''
+https://github.com/davda54/sam
+'''
+
+
+@OPTIMIZERS.register_module
+class SAM(Optimizer):
+    def __init__(self, params, base_optimizer=SGD, rho=0.05, adaptive=False, **kwargs):
         assert rho >= 0.0, f"Invalid rho, should be non-negative: {rho}"
 
         defaults = dict(rho=rho, adaptive=adaptive, **kwargs)
@@ -37,14 +47,18 @@ class SAM(torch.optim.Optimizer):
 
         if zero_grad: self.zero_grad()
 
-    @torch.no_grad()
-    def step(self, closure=None):
-        assert closure is not None, "Sharpness Aware Minimization requires closure, but it was not provided"
-        closure = torch.enable_grad()(closure)  # the closure should do a full forward-backward pass
+    # @torch.no_grad()
+    # def step(self, closure=None):
+    #     assert closure is not None, "Sharpness Aware Minimization requires closure, but it was not provided"
+    #     closure = torch.enable_grad()(closure)  # the closure should do a full forward-backward pass
+    #
+    #     self.first_step(zero_grad=True)
+    #     closure()
+    #     self.second_step()
 
-        self.first_step(zero_grad=True)
-        closure()
-        self.second_step()
+    @torch.no_grad()
+    def step(self):
+        self.first_step()
 
     def _grad_norm(self):
         shared_device = self.param_groups[0]["params"][0].device  # put everything on the same device, in case of model parallelism

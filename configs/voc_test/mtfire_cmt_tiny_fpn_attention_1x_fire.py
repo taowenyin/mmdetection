@@ -9,9 +9,9 @@ _base_ = [
 dataset_type = 'CocoDataset'
 
 # MatPool
-data_root = '/mnt/dataset/VOC/coco/'
+# data_root = '/mnt/dataset/VOC/coco/'
 # Windows
-# data_root = 'D:/MyCode/Dataset/VOC/coco/'
+data_root = 'D:/MyCode/Dataset/VOC/coco/'
 # Linux
 # data_root = '/home/taowenyin/MyCode/Dataset/voc2012/coco/'
 
@@ -28,7 +28,7 @@ model = dict(
         out_indices=[0, 1, 2, 3],
         init_cfg=dict(
             type='Pretrained',
-            checkpoint='./checkpoints/m_cmt_tiny.pth',
+            checkpoint='../checkpoints/m_cmt_tiny.pth',
         )
     ),
     neck=dict(
@@ -137,6 +137,16 @@ data = dict(
         img_prefix=data_root + 'val2017/',
         pipeline=test_pipeline)
 )
+
+# optimizer
+# optimizer = dict(type='SGD', lr=0.02, momentum=0.9, weight_decay=0.0001)
+optimizer = dict(type='SAM', lr=0.02, momentum=0.9, weight_decay=0.0001)
+
+custom_hooks = [
+    dict(
+        type='SamOptimizerHooK',
+        priority=48),
+]
 
 runner = dict(type='EpochBasedRunner', max_epochs=12)
 
