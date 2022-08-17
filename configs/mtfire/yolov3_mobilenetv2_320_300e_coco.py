@@ -89,7 +89,7 @@ data = dict(
     )
 )
 
-load_from = './checkpoints/yolov3_mobilenetv2_320_300e_coco_20210719_215349-d18dff72.pth'
+load_from = '/mnt/mm_ws/checkpoints/yolov3_mobilenetv2_320_300e_coco_20210719_215349-d18dff72.pth'
 
 checkpoint_config = dict(create_symlink=False)
 

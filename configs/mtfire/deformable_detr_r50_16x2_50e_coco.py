@@ -172,7 +172,7 @@ runner = dict(type='EpochBasedRunner', max_epochs=12)
 # base_batch_size = (16 GPUs) x (2 samples per GPU)
 auto_scale_lr = dict(base_batch_size=32)
 
-load_from = './checkpoints/deformable_detr_r50_16x2_50e_coco_20210419_220030-a12b9512.pth'
+load_from = '/mnt/mm_ws/checkpoints/deformable_detr_r50_16x2_50e_coco_20210419_220030-a12b9512.pth'
 
 checkpoint_config = dict(create_symlink=False)
 

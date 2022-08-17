@@ -139,4 +139,4 @@ runner = dict(type='EpochBasedRunner', max_epochs=12)
 
 checkpoint_config = dict(create_symlink=False)
 
-work_dir = './voc_test/mobilenet'
+work_dir = '/mnt/mm_ws/voc_test/mobilenet'

@@ -56,7 +56,7 @@ data = dict(
 
 runner = dict(type='EpochBasedRunner', max_epochs=12)
 
-load_from = './checkpoints/faster_rcnn_r50_fpn_1x_coco_20200130-047c8118.pth'
+load_from = '/mnt/mm_ws/checkpoints/faster_rcnn_r50_fpn_1x_coco_20200130-047c8118.pth'
 
 checkpoint_config = dict(create_symlink=False)
 

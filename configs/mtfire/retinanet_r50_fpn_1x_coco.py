@@ -80,7 +80,7 @@ data = dict(
 # optimizer
 optimizer = dict(type='SGD', lr=0.01, momentum=0.9, weight_decay=0.0001)
 
-load_from = './checkpoints/retinanet_r50_fpn_1x_coco_20200130-c2398f9e.pth'
+load_from = '/mnt/mm_ws/checkpoints/retinanet_r50_fpn_1x_coco_20200130-c2398f9e.pth'
 
 checkpoint_config = dict(create_symlink=False)
 

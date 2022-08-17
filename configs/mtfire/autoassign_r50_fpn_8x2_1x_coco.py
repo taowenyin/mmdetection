@@ -119,7 +119,7 @@ lr_config = dict(
 
 runner = dict(type='EpochBasedRunner', max_epochs=12)
 
-load_from = './checkpoints/auto_assign_r50_fpn_1x_coco_20210413_115540-5e17991f.pth'
+load_from = '/mnt/mm_ws/checkpoints/auto_assign_r50_fpn_1x_coco_20210413_115540-5e17991f.pth'
 
 checkpoint_config = dict(create_symlink=False)
 

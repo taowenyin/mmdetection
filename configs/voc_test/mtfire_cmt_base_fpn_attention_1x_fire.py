@@ -28,7 +28,7 @@ model = dict(
         out_indices=[0, 1, 2, 3],
         init_cfg=dict(
             type='Pretrained',
-            checkpoint='../checkpoints/m_cmt_base.pth',
+            checkpoint='/mnt/mm_ws/checkpoints/m_cmt_base.pth',
         )
     ),
     neck=dict(
@@ -142,4 +142,4 @@ runner = dict(type='EpochBasedRunner', max_epochs=12)
 
 checkpoint_config = dict(create_symlink=False)
 
-work_dir = './voc_test/mtfire/base'
+work_dir = '/mnt/mm_ws/voc_test/mtfire/base'

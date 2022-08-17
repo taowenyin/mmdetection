@@ -28,7 +28,7 @@ model = dict(
         out_indices=[0, 1, 2, 3],
         init_cfg=dict(
             type='Pretrained',
-            checkpoint='./checkpoints/m_cmt_base.pth',
+            checkpoint='/mnt/mm_ws/checkpoints/m_cmt_base.pth',
         )
     ),
     neck=dict(

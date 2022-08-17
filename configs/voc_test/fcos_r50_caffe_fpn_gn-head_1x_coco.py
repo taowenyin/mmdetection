@@ -136,8 +136,8 @@ lr_config = dict(
     step=[8, 11])
 runner = dict(type='EpochBasedRunner', max_epochs=12)
 
-load_from = '../checkpoints/fcos_r50_caffe_fpn_gn-head_1x_coco-821213aa.pth'
+load_from = '/mnt/mm_ws/checkpoints/fcos_r50_caffe_fpn_gn-head_1x_coco-821213aa.pth'
 
 checkpoint_config = dict(create_symlink=False)
 
-work_dir = './voc_test/fcos'
+work_dir = '/mnt/mm_ws/voc_test/fcos'

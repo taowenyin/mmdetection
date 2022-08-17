@@ -13,7 +13,7 @@
     <option name="ADD_SOURCE_ROOTS" value="true" />
     <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
     <option name="SCRIPT_NAME" value="$PROJECT_DIR$/tools/analysis_tools/analyze_logs.py" />
-    <option name="PARAMETERS" value="plot_curve ../../fire_detection/fasterrcnn/20220730_132346.log.json ../../fire_detection/retinanet/20220729_154416.log.json ../../fire_detection/fcos/20220719_034237.log.json ../../fire_detection/autoassign/20220729_150647.log.json ../../fire_detection/atss/20220729_144919.log.json ../../fire_detection/yolov3/20220730_132105.log.json --legend Faster-RCNN RetinaNet FCOS AutoAssign ATSS YOLOv3 --keys bbox_mAP" />
+    <option name="PARAMETERS" value="plot_curve /mnt/mm_ws/fire_detection/fasterrcnn/20220730_132346.log.json /mnt/mm_ws/fire_detection/retinanet/20220729_154416.log.json /mnt/mm_ws/fire_detection/fcos/20220719_034237.log.json /mnt/mm_ws/fire_detection/autoassign/20220729_150647.log.json /mnt/mm_ws/fire_detection/atss/20220729_144919.log.json /mnt/mm_ws/fire_detection/yolov3/20220730_132105.log.json --legend Faster-RCNN RetinaNet FCOS AutoAssign ATSS YOLOv3 --keys bbox_mAP" />
     <option name="SHOW_COMMAND_LINE" value="false" />
     <option name="EMULATE_TERMINAL" value="false" />
     <option name="MODULE_MODE" value="false" />
