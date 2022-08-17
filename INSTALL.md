@@ -157,25 +157,22 @@ python tools/analysis_tools/get_flops.py ./configs/mtfire/deformable_detr_r50_16
 python -m torch.distributed.launch --nproc_per_node=1 --master_port=29500 tools/analysis_tools/benchmark.py ./configs/mtfire/deformable_detr_r50_16x2_50e_coco.py ./fire_detection/deformable/epoch_12.pth --launcher pytorch
 ```
 
-# 自定义模型
+# MTFire
 
-## MTFire
+## 训练指令
 
-### 训练指令
-
-#### Fire
+### Fire
 
 ```bash
 python tools/train.py ./configs/mtfire/mtfire_cmt_fcoshead_fpn_attention_1x_fire.py
 python tools/train.py ./configs/mtfire/mtfire_cmt_atss_fpn_attention_1x_fire.py
-python ./tools/dist_train.sh ./configs/mtfire/mtfire_cmt_atss_fpn_attention_1x_fire.py
 ```
 
 ```bash
 bash ./tools/dist_train.sh ./configs/mtfire/mtfire_cmt_atss_fpn_attention_1x_fire.py 4
 ```
 
-#### VOC
+### VOC
 
 ```bash
 python tools/train.py ./configs/voc_test/mtfire_cmt_base_fpn_attention_1x_fire.py
@@ -184,16 +181,16 @@ python tools/train.py ./configs/voc_test/mtfire_cmt_xs_fpn_attention_1x_fire.py
 python tools/train.py ./configs/voc_test/mtfire_cmt_tiny_fpn_attention_1x_fire.py
 ```
 
-### 模型复杂度指令
+## 模型复杂度指令
 
-#### Fire
+### Fire
 
 ```bash
 python tools/analysis_tools/get_flops.py ./configs/mtfire/mtfire_cmt_atss_fpn_attention_1x_fire.py --shape 256 256
 python tools/analysis_tools/get_flops.py ./configs/mtfire/mtfire_cmt_fcoshead_fpn_attention_1x_fire.py --shape 256 256
 ```
 
-#### VOC
+### VOC
 
 ```bash
 python tools/analysis_tools/get_flops.py ./configs/voc_test/mtfire_cmt_base_fpn_attention_1x_fire.py --shape 256 256
@@ -202,16 +199,16 @@ python tools/analysis_tools/get_flops.py ./configs/voc_test/mtfire_cmt_xs_fpn_at
 python tools/analysis_tools/get_flops.py ./configs/voc_test/mtfire_cmt_tiny_fpn_attention_1x_fire.py --shape 160 160
 ```
 
-### 模型FPS指令
+## 模型FPS指令
 
-#### Fire
+### Fire
 
 ```bash
 python -m torch.distributed.launch --nproc_per_node=1 --master_port=29500 tools/analysis_tools/benchmark.py ./configs/mtfire/mtfire_cmt_atss_fpn_attention_1x_fire.py ./fire_detection/mtfire/atss/epoch_12.pth --launcher pytorch
 python -m torch.distributed.launch --nproc_per_node=1 --master_port=29500 tools/analysis_tools/benchmark.py ./configs/mtfire/mtfire_cmt_fcoshead_fpn_attention_1x_fire.py ./fire_detection/mtfire/fcos/epoch_12.pth --launcher pytorch
 ```
 
-#### VOC
+### VOC
 
 ```bash
 python -m torch.distributed.launch --nproc_per_node=1 --master_port=29500 tools/analysis_tools/benchmark.py ./configs/voc_test/mtfire_cmt_base_fpn_attention_1x_fire.py ./voc_test/mtfire/base/epoch_12.pth --launcher pytorch
