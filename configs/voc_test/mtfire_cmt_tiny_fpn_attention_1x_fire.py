@@ -11,9 +11,11 @@ dataset_type = 'CocoDataset'
 # MatPool
 # data_root = '/mnt/dataset/VOC/coco/'
 # Windows
-data_root = 'D:/MyCode/Dataset/VOC/coco/'
+# data_root = 'D:/MyCode/Dataset/VOC/coco/'
 # Linux
 # data_root = '/home/taowenyin/MyCode/Dataset/voc2012/coco/'
+# MAC
+data_root = '/Users/taowenyin/Database/VOC/coco/'
 
 classes = ('aeroplane', 'bicycle', 'bird', 'boat', 'bottle', 'bus', 'car',
            'cat', 'chair', 'cow', 'diningtable', 'dog', 'horse',
@@ -139,8 +141,9 @@ data = dict(
 )
 
 # optimizer
-# optimizer = dict(type='SGD', lr=0.02, momentum=0.9, weight_decay=0.0001)
-optimizer = dict(type='SAM', lr=0.02, momentum=0.9, weight_decay=0.0001)
+optimizer = dict(type='SGD', lr=0.02, momentum=0.9, weight_decay=0.0001)
+# optimizer = dict(type='SAM', lr=0.02, momentum=0.9, weight_decay=0.0001)
+optimizer_config = dict(type='SamOptimizerHooK')
 
 custom_hooks = [
     dict(
