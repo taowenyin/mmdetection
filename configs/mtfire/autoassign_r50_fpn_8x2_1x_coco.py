@@ -12,7 +12,7 @@ dataset_type = 'CocoDataset'
 # MatPool
 data_root = '/mnt/dataset/fire_coco/'
 # Windows
-# data_root = 'D:/MyCode/Dataset/voc2007/coco/'
+# data_root = 'D:/MyCode/Dataset/VOC/coco/'
 # MAC
 # data_root = '/Users/taowenyin/Database/voc2012/coco/'
 
@@ -123,4 +123,4 @@ load_from = './checkpoints/auto_assign_r50_fpn_1x_coco_20210413_115540-5e17991f.
 
 checkpoint_config = dict(create_symlink=False)
 
-work_dir = './fire_detection/autoassign'
+work_dir = '/mnt/mm_ws/fire_detection/autoassign'

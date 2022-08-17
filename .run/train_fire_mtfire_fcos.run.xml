@@ -13,7 +13,7 @@
     <option name="ADD_SOURCE_ROOTS" value="true" />
     <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
     <option name="SCRIPT_NAME" value="$PROJECT_DIR$/tools/train.py" />
-    <option name="PARAMETERS" value="../configs/mtfire/mtfire_cmt_fcoshead_fpn_attention_1x_fire.py --work-dir=../fire_detection/mtfire/fcos" />
+    <option name="PARAMETERS" value="../configs/mtfire/mtfire_cmt_fcoshead_fpn_attention_1x_fire.py --work-dir=../../mm_ws/fire_detection/mtfire/fcos" />
     <option name="SHOW_COMMAND_LINE" value="false" />
     <option name="EMULATE_TERMINAL" value="false" />
     <option name="MODULE_MODE" value="false" />

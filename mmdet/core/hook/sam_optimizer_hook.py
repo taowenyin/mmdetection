@@ -15,10 +15,11 @@ class SamOptimizerHooK(OptimizerHook):
             if self.detect_anomalous_params:
                 self.detect_anomalous_parameters(runner.outputs['loss'], runner)
 
-            # SAM
+            # first forward-backward pass
             runner.outputs['loss'].backward(retain_graph=True)
             runner.optimizer.first_step(zero_grad=True)
 
+            # second forward-backward pass
             runner.outputs['loss'].backward()
             runner.optimizer.second_step(zero_grad=True)
         else:

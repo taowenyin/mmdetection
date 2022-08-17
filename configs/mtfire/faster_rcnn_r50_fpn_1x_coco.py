@@ -11,7 +11,7 @@ dataset_type = 'CocoDataset'
 # MatPool
 data_root = '/mnt/dataset/fire_coco/'
 # Windows
-# data_root = 'D:/MyCode/Dataset/voc2007/coco/'
+# data_root = 'D:/MyCode/Dataset/VOC/coco/'
 # MAC
 # data_root = '/Users/taowenyin/Database/voc2012/coco/'
 
@@ -60,4 +60,4 @@ load_from = './checkpoints/faster_rcnn_r50_fpn_1x_coco_20200130-047c8118.pth'
 
 checkpoint_config = dict(create_symlink=False)
 
-work_dir = './fire_detection/fasterrcnn'
+work_dir = '/mnt/mm_ws/fire_detection/fasterrcnn'

@@ -9,9 +9,9 @@ _base_ = [
 dataset_type = 'CocoDataset'
 
 # MatPool
-data_root = '/mnt/dataset/VOC/coco/'
+# data_root = '/mnt/dataset/VOC/coco/'
 # Windows
-# data_root = 'D:/MyCode/Dataset/voc2007/coco/'
+data_root = 'D:/MyCode/Dataset/VOC/coco/'
 # Linux
 # data_root = '/home/taowenyin/MyCode/Dataset/voc2012/coco/'
 
@@ -28,7 +28,7 @@ model = dict(
         out_indices=[0, 1, 2, 3],
         init_cfg=dict(
             type='Pretrained',
-            checkpoint='./checkpoints/m_cmt_base.pth',
+            checkpoint='../checkpoints/m_cmt_base.pth',
         )
     ),
     neck=dict(

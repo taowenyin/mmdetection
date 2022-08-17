@@ -7,7 +7,7 @@ dataset_type = 'CocoDataset'
 # MatPool
 data_root = '/mnt/dataset/fire_coco/'
 # Windows
-# data_root = 'D:/MyCode/Dataset/voc2007/coco/'
+# data_root = 'D:/MyCode/Dataset/VOC/coco/'
 # MAC
 # data_root = '/Users/taowenyin/Database/voc2012/coco/'
 
@@ -95,4 +95,4 @@ checkpoint_config = dict(create_symlink=False)
 
 runner = dict(type='EpochBasedRunner', max_epochs=12)
 
-work_dir = './fire_detection/yolov3'
+work_dir = '/mnt/mm_ws/fire_detection/yolov3'
