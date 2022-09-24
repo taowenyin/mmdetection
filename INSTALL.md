@@ -166,9 +166,7 @@ python -m torch.distributed.launch --nproc_per_node=1 --master_port=29500 tools/
 ```bash
 python tools/train.py ./configs/mtfire/mtfire_cmt_fcoshead_fpn_attention_1x_fire.py
 python tools/train.py ./configs/mtfire/mtfire_cmt_atss_fpn_attention_1x_fire.py
-```
 
-```bash
 bash ./tools/dist_train.sh ./configs/mtfire/mtfire_cmt_atss_fpn_attention_1x_fire.py 4
 ```
 
