@@ -2,10 +2,9 @@
 conda create --name openmmlab python=3.8 -y
 conda activate openmmlab
 conda install pytorch torchvision torchaudio cudatoolkit=10.2 -c pytorch
-pip install -U openmim
+pip install -U openmim opencv-python terminaltables timm
 mim install mmcv-full
 pip install -v -e .
-pip install timm
 ```
 
 # Anchor-Base方法

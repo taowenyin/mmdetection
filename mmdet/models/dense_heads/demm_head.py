@@ -8,6 +8,8 @@ class DEMMHead(AnchorFreeHead):
     def __init__(self,
                  num_classes,
                  in_channels,
+                 num_query=100,
+                 num_reg_fcs=2,
                  mlp_mixer=None,
                  loss_cls=dict(
                      type='CrossEntropyLoss',
