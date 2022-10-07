@@ -34,10 +34,10 @@ model = dict(
         mlp_mixer=dict(
             type='MLPMixer',
             encoder=dict(
-                type='DemmMLPMixerEncoder'
+                type='DemmMlpMixerEncoder'
             ),
             decoder=dict(
-                type='DemmMLPMixerDecoder',
+                type='DemmMlpMixerDecoder',
             )
         ),
         loss_cls=dict(

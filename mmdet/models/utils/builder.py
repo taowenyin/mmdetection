@@ -45,3 +45,24 @@ def build_linear_layer(cfg, *args, **kwargs):
     layer = linear_layer(*args, **kwargs, **cfg_)
 
     return layer
+
+
+MLPMIXER = Registry('MlpMixer')
+
+
+def build_mlpmixer(cfg, default_args=None):
+    """Builder for Transformer."""
+    return build_from_cfg(cfg, MLPMIXER, default_args)
+
+
+MLPMIXER_LAYER = Registry('mlpmixerLayer')
+
+def build_mlpmixer_layer(cfg, default_args=None):
+    """Builder for transformer layer."""
+    return build_from_cfg(cfg, MLPMIXER_LAYER, default_args)
+
+
+MLPMIXER_LAYER_SEQUENCE = Registry('mlpmixer-layer sequence')
+
+def build_mlpmixer_layer_sequence(cfg, default_args=None):
+    return build_from_cfg(cfg, MLPMIXER_LAYER_SEQUENCE, default_args)
