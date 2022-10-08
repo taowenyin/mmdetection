@@ -123,8 +123,6 @@ class DEMMHead(AnchorFreeHead):
         self.query_embedding = nn.Embedding(self.num_query, self.embed_dims)
 
     def init_weights(self):
-        """Initialize weights of the transformer head."""
-        # The initialization for transformer is important
         self.mlp_mixer.init_weights()
 
     def forward(self, feats, img_metas):
@@ -134,16 +132,6 @@ class DEMMHead(AnchorFreeHead):
         return multi_apply(self.forward_single, feats, img_metas_list)
 
     def forward_single(self, x, img_metas):
-
-        return None
-
-    def get_targets(self,
-                    cls_scores_list,
-                    bbox_preds_list,
-                    gt_bboxes_list,
-                    gt_labels_list,
-                    img_metas,
-                    gt_bboxes_ignore_list=None):
 
         return None
 
@@ -158,6 +146,51 @@ class DEMMHead(AnchorFreeHead):
 
         return None
 
+    def get_targets(self,
+                    cls_scores_list,
+                    bbox_preds_list,
+                    gt_bboxes_list,
+                    gt_labels_list,
+                    img_metas,
+                    gt_bboxes_ignore_list=None):
+
+        return None
+
+    # over-write because img_metas are needed as inputs for bbox_head.
+    def forward_train(self,
+                      x,
+                      img_metas,
+                      gt_bboxes,
+                      gt_labels=None,
+                      gt_bboxes_ignore=None,
+                      proposal_cfg=None,
+                      **kwargs):
+        """Forward function for training mode.
+
+        Args:
+            x (list[Tensor]): Features from backbone.
+            img_metas (list[dict]): Meta information of each image, e.g.,
+                image size, scaling factor, etc.
+            gt_bboxes (Tensor): Ground truth bboxes of the image,
+                shape (num_gts, 4).
+            gt_labels (Tensor): Ground truth labels of each box,
+                shape (num_gts,).
+            gt_bboxes_ignore (Tensor): Ground truth bboxes to be
+                ignored, shape (num_ignored_gts, 4).
+            proposal_cfg (mmcv.Config): Test / postprocessing configuration,
+                if None, test_cfg would be used.
+
+        Returns:
+            dict[str, Tensor]: A dictionary of loss components.
+        """
+        assert proposal_cfg is None, '"proposal_cfg" must be None'
+        outs = self(x, img_metas)
+        if gt_labels is None:
+            loss_inputs = outs + (gt_bboxes, img_metas)
+        else:
+            loss_inputs = outs + (gt_bboxes, gt_labels, img_metas)
+        losses = self.loss(*loss_inputs, gt_bboxes_ignore=gt_bboxes_ignore)
+        return losses
 
 
 

@@ -28,6 +28,8 @@ class MlpMixerLayerSequence(BaseModule):
     def __init__(self):
         super(MlpMixerLayerSequence, self).__init__()
 
+        self.embed_dims = 0
+
     def forward(self):
         return None
 

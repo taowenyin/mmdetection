@@ -5,11 +5,11 @@ _base_ = [
 dataset_type = 'CocoDataset'
 
 # Linux
-# data_root = '/home/taowenyin/MyCode/Dataset/fire_coco/'
+data_root = '/home/taowenyin/MyCode/Dataset/fire_coco/'
 # MatPool
 # data_root = '/mnt/dataset/fire_coco/'
 # Windows
-data_root = 'D:/MyCode/Dataset/fire_coco/'
+# data_root = 'D:/MyCode/Dataset/fire_coco/'
 # MAC
 # data_root = '/Users/taowenyin/Database/voc2012/coco/'
 
@@ -47,7 +47,8 @@ model = dict(
                     ],
                     feedforward_channels=2048,
                     ffn_dropout=0.1,
-                    operation_order=('self_attn', 'norm', 'ffn', 'norm'))),
+                    operation_order=('self_attn', 'norm', 'ffn', 'norm'))
+            ),
             decoder=dict(
                 type='DetrTransformerDecoder',
                 return_intermediate=True,
@@ -63,7 +64,8 @@ model = dict(
                     ffn_dropout=0.1,
                     operation_order=('self_attn', 'norm', 'cross_attn', 'norm',
                                      'ffn', 'norm')),
-            )),
+            )
+        ),
         positional_encoding=dict(
             type='SinePositionalEncoding', num_feats=128, normalize=True),
         loss_cls=dict(
