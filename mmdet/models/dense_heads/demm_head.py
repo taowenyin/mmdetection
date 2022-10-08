@@ -3,7 +3,7 @@ import torch.nn as nn
 
 from mmcv.cnn import Conv2d, Linear, build_activation_layer
 from mmcv.cnn.bricks.transformer import FFN
-from mmdet.core import build_assigner, build_sampler
+from mmdet.core import (build_assigner, build_sampler, multi_apply)
 from mmdet.models.utils import build_mlpmixer
 from ..builder import HEADS, build_loss
 from .anchor_free_head import AnchorFreeHead
@@ -105,6 +105,9 @@ class DEMMHead(AnchorFreeHead):
         self.mlp_mixer = build_mlpmixer(mlp_mixer)
         self.embed_dims = self.mlp_mixer.embed_dims
 
+        # 初始化网络层
+        self._init_layers()
+
     def _init_layers(self):
         self.input_proj = Conv2d(
             self.in_channels, self.embed_dims, kernel_size=1)
@@ -118,6 +121,21 @@ class DEMMHead(AnchorFreeHead):
             add_residual=False)
         self.fc_reg = Linear(self.embed_dims, 4)
         self.query_embedding = nn.Embedding(self.num_query, self.embed_dims)
+
+    def init_weights(self):
+        """Initialize weights of the transformer head."""
+        # The initialization for transformer is important
+        self.mlp_mixer.init_weights()
+
+    def forward(self, feats, img_metas):
+        num_levels = len(feats)
+        img_metas_list = [img_metas for _ in range(num_levels)]
+
+        return multi_apply(self.forward_single, feats, img_metas_list)
+
+    def forward_single(self, x, img_metas):
+
+        return None
 
     def get_targets(self,
                     cls_scores_list,

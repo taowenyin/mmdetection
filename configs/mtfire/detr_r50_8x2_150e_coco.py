@@ -9,7 +9,7 @@ dataset_type = 'CocoDataset'
 # MatPool
 # data_root = '/mnt/dataset/fire_coco/'
 # Windows
-data_root = 'D:/MyCode/Dataset/VOC/coco/'
+data_root = 'D:/MyCode/Dataset/fire_coco/'
 # MAC
 # data_root = '/Users/taowenyin/Database/voc2012/coco/'
 
@@ -29,7 +29,7 @@ model = dict(
         init_cfg=dict(type='Pretrained', checkpoint='torchvision://resnet50')),
     bbox_head=dict(
         type='DETRHead',
-        num_classes=80,
+        num_classes=1,
         in_channels=2048,
         transformer=dict(
             type='Transformer',
