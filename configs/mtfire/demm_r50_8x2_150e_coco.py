@@ -7,9 +7,9 @@ dataset_type = 'CocoDataset'
 # Linux
 # data_root = '/home/taowenyin/MyCode/Dataset/fire_coco/'
 # MatPool
-data_root = '/mnt/dataset/fire_coco/'
+# data_root = '/mnt/dataset/fire_coco/'
 # Windows
-# data_root = 'D:/MyCode/Dataset/VOC/coco/'
+data_root = 'D:/MyCode/Dataset/VOC/coco/'
 # MAC
 # data_root = '/Users/taowenyin/Database/voc2012/coco/'
 
@@ -32,7 +32,7 @@ model = dict(
         num_classes=80,
         in_channels=2048,
         mlp_mixer=dict(
-            type='MLPMixer',
+            type='MlpMixer',
             encoder=dict(
                 type='DemmMlpMixerEncoder'
             ),

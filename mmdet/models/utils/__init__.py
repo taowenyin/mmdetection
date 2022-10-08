@@ -1,6 +1,7 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 from .brick_wrappers import AdaptiveAvgPool2d, adaptive_avg_pool2d
-from .builder import build_linear_layer, build_transformer
+from .builder import (build_linear_layer, build_transformer,
+                      build_mlpmixer, build_mlpmixer_layer, build_mlpmixer_layer_sequence)
 from .ckpt_convert import pvt_convert
 from .conv_upsample import ConvUpsample
 from .csp_layer import CSPLayer
@@ -19,8 +20,9 @@ from .se_layer import DyReLU, SELayer
 from .transformer import (DetrTransformerDecoder, DetrTransformerDecoderLayer,
                           DynamicConv, PatchEmbed, Transformer, nchw_to_nlc,
                           nlc_to_nchw)
-from .mlp_mixer import (MlpMixer, MlpMixerLayerSequence, DemmMlpMixerDecoder,
-                        DemmMlpMixerEncoder, DemmMlpMixer)
+from .mlp_mixer import (MlpMixer, MlpMixerLayerSequence, BaseMlpMixerLayer,
+                        DemmMlpMixerDecoderLayer, DemmMlpMixerEncoderLayer,
+                        DemmMlpMixerDecoder, DemmMlpMixerEncoder, DemmMlpMixer)
 
 __all__ = [
     'ResLayer', 'gaussian_radius', 'gen_gaussian_target',
@@ -33,6 +35,8 @@ __all__ = [
     'nlc_to_nchw', 'pvt_convert', 'sigmoid_geometric_mean',
     'preprocess_panoptic_gt', 'DyReLU',
     'get_uncertain_point_coords_with_randomness', 'get_uncertainty',
-    'MlpMixer', 'MlpMixerLayerSequence', 'DemmMlpMixerDecoder', 'DemmMlpMixerEncoder',
-    'DemmMlpMixer'
+    'MlpMixer', 'MlpMixerLayerSequence', 'BaseMlpMixerLayer',
+    'DemmMlpMixerDecoderLayer', 'DemmMlpMixerEncoderLayer',
+    'DemmMlpMixerDecoder', 'DemmMlpMixerEncoder', 'DemmMlpMixer',
+    'build_mlpmixer', 'build_mlpmixer_layer', 'build_mlpmixer_layer_sequence'
 ]

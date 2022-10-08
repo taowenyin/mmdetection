@@ -1,10 +1,13 @@
 import torch
+import torch.nn as nn
 
 from mmcv.cnn import Conv2d, Linear, build_activation_layer
 from mmcv.cnn.bricks.transformer import FFN
 from mmdet.core import build_assigner, build_sampler
+from mmdet.models.utils import build_mlpmixer
 from ..builder import HEADS, build_loss
 from .anchor_free_head import AnchorFreeHead
+from mmcv.runner import force_fp32
 
 
 @HEADS.register_module()
@@ -99,7 +102,7 @@ class DEMMHead(AnchorFreeHead):
                                      dict(type='ReLU', inplace=True))
         self.activate = build_activation_layer(self.act_cfg)
 
-        self.mlp_mixer = self.build_mlpmixer(mlp_mixer)
+        self.mlp_mixer = build_mlpmixer(mlp_mixer)
         self.embed_dims = self.mlp_mixer.embed_dims
 
     def _init_layers(self):
@@ -116,7 +119,24 @@ class DEMMHead(AnchorFreeHead):
         self.fc_reg = Linear(self.embed_dims, 4)
         self.query_embedding = nn.Embedding(self.num_query, self.embed_dims)
 
-    def build_mlpmixer(self, mlp_mixer):
+    def get_targets(self,
+                    cls_scores_list,
+                    bbox_preds_list,
+                    gt_bboxes_list,
+                    gt_labels_list,
+                    img_metas,
+                    gt_bboxes_ignore_list=None):
+
+        return None
+
+    @force_fp32(apply_to=('all_cls_scores_list', 'all_bbox_preds_list'))
+    def loss(self,
+             all_cls_scores_list,
+             all_bbox_preds_list,
+             gt_bboxes_list,
+             gt_labels_list,
+             img_metas,
+             gt_bboxes_ignore=None):
 
         return None
 

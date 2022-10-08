@@ -51,14 +51,12 @@ MLPMIXER = Registry('MlpMixer')
 
 
 def build_mlpmixer(cfg, default_args=None):
-    """Builder for Transformer."""
     return build_from_cfg(cfg, MLPMIXER, default_args)
 
 
 MLPMIXER_LAYER = Registry('mlpmixerLayer')
 
 def build_mlpmixer_layer(cfg, default_args=None):
-    """Builder for transformer layer."""
     return build_from_cfg(cfg, MLPMIXER_LAYER, default_args)
 
 
