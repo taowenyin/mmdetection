@@ -132,8 +132,15 @@ class DEMMHead(AnchorFreeHead):
         return multi_apply(self.forward_single, feats, img_metas_list)
 
     def forward_single(self, x, img_metas):
+        x = self.input_proj(x)
 
-        return None
+        outs_dec, _ = self.mlp_mixer(x, self.query_embedding.weight)
+
+        all_cls_scores = self.fc_cls(outs_dec)
+        all_bbox_preds = self.fc_reg(self.activate(
+            self.reg_ffn(outs_dec))).sigmoid()
+
+        return all_cls_scores, all_bbox_preds
 
     @force_fp32(apply_to=('all_cls_scores_list', 'all_bbox_preds_list'))
     def loss(self,

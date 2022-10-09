@@ -33,11 +33,26 @@ model = dict(
         in_channels=2048,
         mlp_mixer=dict(
             type='MlpMixer',
+            arch='b',
             encoder=dict(
-                type='DemmMlpMixerEncoder'
+                type='DemmMlpMixerEncoder',
+                num_layers=6,
+                mlpmixerlayers=dict(
+                    type='BaseMlpMixerLayer',
+                    mixer_cfgs=[
+                        dict(
+                            embed_dims=256,
+                            dropout=0.1,
+                        )
+                    ],
+                    feedforward_channels=2048,
+                    ffn_dropout=0.1,
+                    operation_order=('mixer', 'norm', 'ffn', 'norm')
+                )
             ),
             decoder=dict(
                 type='DemmMlpMixerDecoder',
+                num_layers=6,
             )
         ),
         loss_cls=dict(
