@@ -33,9 +33,9 @@ model = dict(
         in_channels=2048,
         mlp_mixer=dict(
             type='MlpMixer',
-            arch='b',
             encoder=dict(
                 type='DemmMlpMixerEncoder',
+                arch='b',
                 num_layers=6,
                 mlpmixerlayers=dict(
                     type='BaseMlpMixerLayer',
@@ -52,6 +52,7 @@ model = dict(
             ),
             decoder=dict(
                 type='DemmMlpMixerDecoder',
+                arch='b',
                 num_layers=6,
             )
         ),
